@@ -1025,7 +1025,7 @@ function drawPortal(x,y,r,a,rot){ctx.save();ctx.translate(x,y);ctx.globalAlpha=M
  ctx.restore()}
 // ---- casting ----
 function castDoc(f,tg,r){f.anim=.4;
- if(r>=.85&&(dur<18||imm(tg)))r=.1;          // axe slice only after the duel has warmed up
+ if(r>=.85&&(tg.hp>=tg.mx*.15||imm(tg)))r=.1;          // portal axe slice ONLY when enemy HP is under 15%
  if(r<.40){f.gcd=R(1,1.4);logS='Doctor Stings · Orange Ray Circle!';logT=1.6;fx.push({k:'dc',doc:'circle',f,tg,tm:0,hit:false})}
  else if(r<.70){f.gcd=5;logS='Doctor Stings · 10 GLOWING BRACELETS!';logT=2.2;banner='Doctor Stings sits and FLOATS...';bannerT=1.5;fx.push({k:'dc',doc:'brace',f,tg,tm:0})}
  else if(r<.85){f.gcd=5.8;f.anim=.5;logS='Doctor Stings · RED ROPES & GIANT BEAR!';logT=2.6;banner='Glowing RED ROPES tie the enemy to the ground...';bannerT=2;fx.push({k:'dc',doc:'bear',f,tg,tm:0,hit:false})}
@@ -1365,7 +1365,7 @@ function drawLavaPool(p){const age=time-p.t0,gr=Math.min(1,age/.15),fa=Math.max(
  ctx.fillStyle='rgba(255,210,90,'+(.65+.25*Math.sin(time*8+p.x))+')';ctx.beginPath();ctx.ellipse(p.x,p.y,rx*.55,ry*.5,0,0,7);ctx.fill();ctx.restore()}
 function magClean(f,g){g.mlt=0;g.ash=0;g.cfx=null;g.kb=0;f.cfx=null;f.ff=0;f.dnc=0}
 function magLock(g){g.gcd=Math.max(g.gcd,1);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.kb=0}
-const MG={H:[.55,.78,1.01,1.24,1.47,1.75],KD:[0,0,1,0,1,1],AR:[1.5,2.1,2.7,3.3]};
+const MG={H:[.55,.78,1.01,1.24,1.47,1.75],KD:[0,0,1,0,1,1],AR:[2.1]};
 function stepMag(e,dt){const f=e.f,g=e.tg,t=e.tm;
  if(e.d===undefined){e.d=Math.sign(g.x-f.x)||1;e.x0=f.x;e.h={};e.pts=[];e.bl=[];e.ar=[]}
  if(abortFx(e,f,g)||f.rv||(e.k!='V'&&imm(g))){magClean(f,g);return false}
@@ -1399,7 +1399,7 @@ function stepMag(e,dt){const f=e.f,g=e.tg,t=e.tm;
   if(t>=5.4){magClean(f,g);f.gcd=Math.max(f.gcd,R(.8,1.2));return false}
   return true}
  // ---- ash freeze + apple + arrows ----
- const xb=Math.max(60,Math.min(1020,e.x0-d*230)),hy=G-150;
+ const xb=Math.max(60,Math.min(1020,e.x0-d*230)),hy=G-215*(g.sc/1.7);
  f.anim=Math.max(f.anim,t<.5?.2:0);
  if(t>=.5){magLock(g);g.ash=1}
  if(t<.5&&Math.random()<.9)parts.push({x:f.x+d*30+(g.x-f.x)*(t/.5)*.9,y:G-100+R(-30,30),vx:R(-1,1),vy:R(-1,1),l:.6,c:'#9a948e',r:R(4,9),g:0});
@@ -1411,7 +1411,7 @@ function stepMag(e,dt){const f=e.f,g=e.tg,t=e.tm;
  MG.AR.forEach((h,k)=>{ev('a'+k,h,()=>{f.anim=.3;const[sx,sy]=hand(f);e.ar.push({sx,sy,t0:t,k})})});
  e.ar.forEach(a=>{if(!a.hit&&t>=a.t0+.22){a.hit=true;
    if(fixed(f,g,g.mx*.05,true)){txt(g.x+R(-15,15),hy-60,Math.round(g.mx*.05),'#ff5a4a');spawn(g.x,hy,'#b3121a',14,6);spawn(g.x,hy,'#ffd060',6,5);shake=Math.max(shake,5);g.drip=Math.max(g.drip||0,8)}
-   if(a.k==3){e.ap=t;spawn(g.x,G-215,'#d8281a',30,8);spawn(g.x,G-215,'#fff0c0',10,6);banner='BULLSEYE! Shot through the head!';bannerT=1.6}}});
+   if(a.k==0){e.ap=t;spawn(g.x,G-215,'#d8281a',30,8);spawn(g.x,G-215,'#fff0c0',10,6);banner='BULLSEYE! Shot through the head!';bannerT=1.6}}});
  if(t>=3.9&&g.ash){g.ash=0;spawn(g.x,G-90,'#b8b2ac',40,6)}
  if(t>=4.4){magClean(f,g);f.gcd=Math.max(f.gcd,R(.8,1.2));return false}
  return true}
@@ -1459,7 +1459,7 @@ function drawMag(e){const f=e.f,g=e.tg,t=e.tm;if(e.d===undefined)return;const d=
    ctx.strokeStyle='#5a3a1a';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(g.x,ay-10);ctx.lineTo(g.x+3,ay-20);ctx.stroke();ctx.fillStyle='#4a9a2a';ctx.beginPath();ctx.ellipse(g.x+10,ay-17,8,4,-.5,0,7);ctx.fill();ctx.globalAlpha=1}
   if(t>=1.2&&t<3.7){const[hx,hy]=hand(f),dd=f.face||d;ctx.strokeStyle='#5a2a14';ctx.lineWidth=4;ctx.beginPath();ctx.arc(hx-dd*8,hy,30,dd>0?-1.2:Math.PI-1.2+.0,dd>0?1.2:Math.PI+1.2);ctx.stroke();
    ctx.strokeStyle='#e8d8c0';ctx.lineWidth=1.2;const bx=hx-dd*8+dd*30*Math.cos(1.2),by1=hy-30*Math.sin(1.2),by2=hy+30*Math.sin(1.2);ctx.beginPath();ctx.moveTo(bx,by1);ctx.lineTo(bx-dd*6,hy);ctx.lineTo(bx,by2);ctx.stroke()}
-  e.ar.forEach(a=>{if(a.hit)return;const u=Math.min(1,(t-a.t0)/.22),x=a.sx+(g.x-a.sx)*u,y=a.sy+(G-150-a.sy)*u,ang=Math.atan2(G-150-a.sy,g.x-a.sx);drawMagArrow(x,y,ang,1)})}
+  e.ar.forEach(a=>{if(a.hit)return;const u=Math.min(1,(t-a.t0)/.22),x=a.sx+(g.x-a.sx)*u,y=a.sy+(G-215*(g.sc/1.7)-a.sy)*u,ang=Math.atan2(G-215*(g.sc/1.7)-a.sy,g.x-a.sx);drawMagArrow(x,y,ang,1)})}
  ctx.restore()}
 
 let last=performance.now();
