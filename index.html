@@ -43,7 +43,7 @@ function mk(t){return{t,x:1200,y:G,sc:.85,tx:1200,ts:.85,hp:HP,mx:HP,cd:T[t].s.m
 function init(pk){let ids=ROSTER.slice().sort(()=>Math.random()-.5);if(pk&&pk.length==2)ids=[pk[0],pk[1],...ids.filter(i=>i!=pk[0]&&i!=pk[1])];const o=ids.map(mk);D=[o[0],o[1]];Wt=[o[2],o[3],o[4],o[5]];benchQ=o.slice(6);
  D[0].x=D[0].tx=-100;D[1].x=D[1].tx=1180;Wt.forEach((w,i)=>w.x=w.tx=WS[i]);benchQ.forEach(b=>b.x=b.tx=1300);envI=ENVL[Math.floor(R(0,ENVL.length))];slots();start()}
 function slots(){D[0].tx=390;D[1].tx=690;D.forEach(d=>d.ts=1.7);Wt.forEach((w,i)=>{if(!w.helping){w.tx=WS[i];w.ts=.85}});benchQ.forEach(b=>b.tx=1300)}
-function start(){phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.split=0;d.al=undefined;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false}
+function start(){phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false}
 function sched(d,fn){timers.push({d,fn})}
 function spawn(x,y,c,n,sp=3){for(let i=0;i<n;i++)parts.push({x,y,vx:R(-sp,sp),vy:R(-sp,sp*.6),l:R(.3,.9),c,r:R(2,5)})}
 function txt(x,y,s,c){texts.push({x,y,s,c,l:1.1})}
@@ -130,13 +130,13 @@ function drawTankFx(e){if(e.ax===undefined)return;const f=e.f,g=e.tg,al=Math.min
  ctx.restore()}
 function startAmb(g){ambUsed=true;const o=D[0]==g?D[1]:D[0],left=g.x<540,fo=left?-1:1,vc=g.x-g.face*g.sc*48,xp=left?Math.max(110,vc-225):Math.min(970,vc+225);
  const mm=[0,1].map(()=>{const m=mk(0);m.med=1;m.sc=1.05;m.y=G+24;m.al=0;return m});
- amb={g,o,left,fo,s:-fo,vc,xp,sx:left?-170:W+170,ax:left?-170:W+170,tm:0,pause:true,med:mm,fall:false,rv:0,zt:0,b1:0};
+ amb={g,o,left,fo,s:-fo,vc,xp,sx:left?-170:W+170,ax:left?-170:W+170,tm:0,pause:true,med:mm,fall:false,rv:0,zt:0,b1:0,fire:Math.random()<.2};
  g.rolled=true;g.vl=undefined;g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;g.gzs=0;g.bleed=0;g.cloud=0;g.swarm=null;g.tree=null;g.whale=null;g.demon=0;g.giant=0;g.arm=0;g.hv=0;g.burn=0;g.chr=0;g.shock=0;g.clone=null;g.fly=false;g.cfx=null;g.df=null;
  banner='AMBULANCE is coming for '+BN(g.t)+'!';bannerT=2.4;logS='Ambulance · 2 medics rush in!';logT=2.4}
 function endAmb(){const a=amb;if(!a)return;a.g.al=undefined;a.g.rise=0;a.g.down=0;a.o.down=0;amb=null}
 function stepAmb(dt){const a=amb;if(!a)return;const g=a.g,o=a.o,s=a.s;
  if(phase!=='fight'&&a.pause){endAmb();return}
- a.tm+=dt;const t=a.tm,sm=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u)};
+ a.tm+=dt;if(a.fire){stepAmbFire(a,dt);return}const t=a.tm,sm=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u)};
  if(t<5.3){a.ax=a.sx+(a.xp-a.sx)*(1-Math.pow(1-Math.min(1,t/1.4),2))}else{const u=Math.min(1,(t-5.3)/1.3);a.ax=a.xp+a.fo*u*u*620}
  if(t<1.4&&Math.random()<.6)parts.push({x:a.ax-a.fo*60+R(-60,60),y:G+104,vx:R(-1,1),vy:R(-2,0),l:.5,c:'#8a7a6a',r:R(3,6)});
  const dr=a.ax-a.fo*105,[ml,mr]=a.med,cEnd=dr+s*80;
@@ -154,7 +154,35 @@ function stepAmb(dt){const a=amb;if(!a)return;const g=a.g,o=a.o,s=a.s;
  if(a.fall&&a.pause){a.rv+=2000*dt;g.rise-=a.rv*dt;g.down=0;g.kb=0;
   if(g.rise<=0){g.rise=0;a.pause=false;shake=Math.max(shake,18);spawn(g.x,G,'#ddd',45,6);spawn(g.x,G,'#7a5230',35,7);g.hp=Math.max(g.hp,g.mx*.5);g.down=.9;g.rolled=false;txt(g.x,G-210,'+HEAL','#7fff9a');banner='FIGHT AGAIN!';bannerT=1.6}}
  if(t>=7.2&&!a.pause)amb=null}
-function drawAmb(){const a=amb,t=a.tm,fo=a.fo,sir=Math.sin(time*14)>0,open=t>=1.4&&t<5.3;
+
+// ===== AMBULANCE (fire variant): opponent shoots the ambulance, it explodes, the patient is charred black for the rest of the duel =====
+function stepAmbFire(a,dt){const g=a.g,o=a.o,t=a.tm,s=a.s,sm=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u)};
+ if(phase!=='fight'){endAmb();return}
+ if(!a.ex){a.ax=a.sx+(a.xp-a.sx)*(1-Math.pow(1-Math.min(1,t/1.4),2));
+  if(t<1.4&&Math.random()<.6)parts.push({x:a.ax-a.fo*60+R(-60,60),y:G+104,vx:R(-1,1),vy:R(-2,0),l:.5,c:'#8a7a6a',r:R(3,6)});
+  g.down=Math.max(g.down,.5);g.kb=0;g.jy=0;g.jv=0;g.hv=0}
+ o.gcd=Math.max(o.gcd,1);o.jt=Math.max(o.jt,2);o.jy=0;o.jv=0;o.kb=0;
+ const[ml,mr]=a.med,dr=a.ax-a.fo*105;
+ if(t>=1.4&&!a.b1){a.b1=1;banner='Medics rush in!';bannerT=1.4}
+ ml.al=mr.al=(t>=1.4&&!a.ex)?1:0;
+ if(t<1.8){ml.x=mr.x=dr;ml.y=mr.y=G+24}
+ else{const u=sm((t-1.8)/1.1);ml.x=dr+(a.vc-s*80-dr)*u;mr.x=dr+(a.vc+s*80-dr)*u;ml.y=mr.y=G+24+Math.sin(t*16)*2}
+ ml.face=mr.face=s;ml.anim=mr.anim=0;
+ if(t>=1.5&&!a.sh){a.sh=1;o.anim=.5;const[hx,hy]=hand(o);a.fs=[hx,hy];banner=BN(o.t)+' shoots the AMBULANCE with FIRE!';bannerT=1.8;logS=BN(o.t)+' · FIRE ON THE AMBULANCE!';logT=2}
+ if(t>=2.1&&!a.ex){a.ex=true;a.et=t;ml.al=mr.al=0;const x=a.ax,y=G+44;
+  spawn(x,y,'#ff9a20',110,11);spawn(x,y,'#222',70,8);spawn(x,y,'#fff',40,9);spawn(x,y,'#d81f26',30,8);
+  spawn(g.x,G-90,'#111',60,7);shake=30;envFlash=Math.max(envFlash,.9);
+  g.char=.93;g.down=Math.max(g.down,1.2);g.hp=Math.max(1,g.hp);
+  banner='THE AMBULANCE EXPLODES! '+BN(g.t)+' is burnt BLACK for the rest of the duel!';bannerT=3;logS='Ambulance · BOOM!';logT=2.4}
+ if(a.ex&&t>=a.et+1.1){g.al=undefined;g.rise=0;g.down=Math.min(g.down,.3);o.down=0;amb=null}}
+function drawAmbFire(a){const t=a.tm,x=a.ax,y=G+44;
+ if(a.sh&&!a.ex){const u=Math.min(1,(t-1.5)/.6),px=a.fs[0]+(x-a.fs[0])*u,py=a.fs[1]+(y-a.fs[1])*u-Math.sin(u*Math.PI)*30;
+  ctx.save();ctx.globalCompositeOperation='lighter';const gr=ctx.createRadialGradient(px,py,0,px,py,46);gr.addColorStop(0,'rgba(255,250,200,.95)');gr.addColorStop(.4,'rgba(255,140,30,.7)');gr.addColorStop(1,'rgba(255,60,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(px,py,46,0,7);ctx.fill();ctx.restore();
+  if(Math.random()<.9)parts.push({x:px+R(-8,8),y:py+R(-8,8),vx:R(-1,1),vy:R(-1,1),l:.4,c:'#ff8a2a',r:R(3,6)})}
+ if(a.ex){const u=t-a.et;if(u<1.1){ctx.save();ctx.globalCompositeOperation='lighter';const p=Math.min(1,u/.7),r=60+260*p,al=Math.max(0,1-u/.9),gr=ctx.createRadialGradient(x,y,0,x,y,r);
+  gr.addColorStop(0,'rgba(255,250,210,'+al+')');gr.addColorStop(.4,'rgba(255,140,30,'+(.8*al)+')');gr.addColorStop(1,'rgba(180,20,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.restore();
+  ctx.save();ctx.globalAlpha=Math.max(0,1-u/1.1);drawFire(x,G+100,2.4);ctx.restore()}}}
+function drawAmb(){if(amb.fire){drawAmbFire(amb);if(amb.ex)return}const a=amb,t=a.tm,fo=a.fo,sir=Math.sin(time*14)>0,open=t>=1.4&&t<5.3;
  ctx.save();ctx.translate(a.ax,G+104);ctx.scale(fo,1);ctx.lineJoin='round';
  ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(0,0,125,9,0,0,7);ctx.fill();
  ctx.fillStyle='#f4f6f8';ctx.strokeStyle='#7d858d';ctx.lineWidth=3;
@@ -929,7 +957,7 @@ if(e==13){ctx.fillStyle='#fff6c8';ctx.shadowColor='#fff6c8';ctx.shadowBlur=60;ct
 if(redT>0){ctx.fillStyle='rgba(150,8,14,'+(.72*Math.min(1,redT/1.5))+')';ctx.fillRect(0,G,W,H-G)}
  if(envFlash>0){ctx.fillStyle=`rgba(255,255,255,${envFlash*.5})`;ctx.fillRect(0,0,W,H)}
 }
-function person(f,cheer){const ty0=f.rv&&f.rv.tm>1?{...T[f.t],c:'#5dff95',c2:'#1d9a4a'}:f.med?{...T[f.t],c:'#f6f6f6',c2:'#d81f26'}:f.dm?{...T[f.t],c:'#c8180c',c2:'#3a0505'}:f.lite?{...T[f.t],c:'#fffbe8',c2:'#ffd24a'}:f.arm>0?{...T[f.t],c:'#e0261a',c2:'#ffd21a'}:f.ice?{...T[f.t],c:'#bfe9ff',c2:'#4a86b0'}:T[f.t],bk=f.bk||0,ty=bk>0?{...ty0,c:bl(ty0.c,bk),c2:bl(ty0.c2,bk)}:ty0,s=f.sc;let yo=(f.jy||0)+(f.sink||0)-(f.hv||0)-(f.rise||0)-(f.sit||0)*62-(f.sit>.5?Math.sin(time*2.5)*4:0)-(f.fl||0)*150+(f.fl>0?Math.sin(time*4)*5*f.fl:0)+(f.hv>8?Math.sin(time*5)*5:0);
+function person(f,cheer){const ty0=f.rv&&f.rv.tm>1?{...T[f.t],c:'#5dff95',c2:'#1d9a4a'}:f.med?{...T[f.t],c:'#f6f6f6',c2:'#d81f26'}:f.dm?{...T[f.t],c:'#c8180c',c2:'#3a0505'}:f.lite?{...T[f.t],c:'#fffbe8',c2:'#ffd24a'}:f.arm>0?{...T[f.t],c:'#e0261a',c2:'#ffd21a'}:f.ice?{...T[f.t],c:'#bfe9ff',c2:'#4a86b0'}:T[f.t],bk=Math.max(f.bk||0,f.char||0),ty=bk>0?{...ty0,c:bl(ty0.c,bk),c2:bl(ty0.c2,bk)}:ty0,s=f.sc;let yo=(f.jy||0)+(f.sink||0)-(f.hv||0)-(f.rise||0)-(f.sit||0)*62-(f.sit>.5?Math.sin(time*2.5)*4:0)-(f.fl||0)*150+(f.fl>0?Math.sin(time*4)*5*f.fl:0)+(f.hv>8?Math.sin(time*5)*5:0);
  if(f.dnc>0)yo-=Math.abs(Math.sin(time*7))*12;
  if(cheer){yo=-Math.abs(Math.sin(time*5+f.ph))*16*s}
  ctx.save();ctx.translate(f.x,f.y+yo);if(f.dnc>0)ctx.rotate(Math.sin(time*7)*.1);if(f.al!==undefined)ctx.globalAlpha=f.al;
@@ -1434,7 +1462,7 @@ function stepVolt(e,dt){const f=e.f,g=e.tg,t=e.tm,cl=x=>Math.max(50,Math.min(103
   if(k==3){shake=Math.max(shake,10);spawn(g.x,G-110,'#fff6a0',24,8);splat(g.x,false,10)}}));
  VT.BP.forEach((h,k)=>ev('p'+k,h,()=>{f.anim=.3;dealt(f,g,k==3?14:8,'Thunder Punch',true);spawn(g.x+d*14,G-110,'#ffe14a',10,6);spawn(g.x+d*14,G-110,'#b3121a',8,5);
   if(k==3){shake=Math.max(shake,10);spawn(g.x,G-110,'#fff6a0',24,8);splat(g.x,false,10)}}));
- VT.KK.forEach((h,k)=>ev('k'+k,h,()=>{f.anim=.3;dealt(f,g,12,'Thunder Kick',true);const yy=G-70-(g.rise||0);spawn(g.x-d*10,yy,'#ffe14a',12,7);spawn(g.x-d*10,yy,'#b3121a',8,5);shake=Math.max(shake,6);
+ VT.KK.forEach((h,k)=>ev('k'+k,h,()=>{f.anim=.3;dealt(f,g,6,'Thunder Kick',true);const yy=G-70-(g.rise||0);spawn(g.x-d*10,yy,'#ffe14a',12,7);spawn(g.x-d*10,yy,'#b3121a',8,5);shake=Math.max(shake,6);
   if(k==3){shake=Math.max(shake,12);spawn(g.x,yy,'#fff6a0',30,9)}}));
  ev('corner',5.55,()=>{shake=Math.max(shake,14);envFlash=Math.max(envFlash,.3);spawn(C,G-90-215,'#ddd',30,6);g.drip=14});
  ev('charge',5.95,()=>{banner='LIGHTNING ARROW!';bannerT=1.4});
