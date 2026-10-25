@@ -1558,12 +1558,16 @@ function itaHair(){ctx.fillStyle='#07070a';ctx.beginPath();ctx.moveTo(-9,-92);ct
  ctx.beginPath();ctx.moveTo(10,-95);ctx.lineTo(13,-84);ctx.lineTo(6,-90);ctx.lineTo(1,-83);ctx.lineTo(-3,-91);ctx.closePath();ctx.fill();
  ctx.strokeStyle='#8a5a4a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(4,-79);ctx.lineTo(5,-74);ctx.moveTo(9,-79);ctx.lineTo(10,-74);ctx.stroke()}
 // 30% sky (knives+shuriken) : 20% close combo -> normalized 60/40
-function castIta(f,tg,r){f.anim=.4;const ok=!imm(tg)&&tg.cfx==null&&!tg.rise&&!tg.fly&&tg.down<1.5;
- if(r<.15&&ok&&!f.cruU){f.cruU=1;f.gcd=9;logS='Itachi · BLOOD MOON TSUKUYOMI!';logT=2.6;banner='Itachi drags the enemy under the BLOOD MOON...';bannerT=2.2;fx.push({k:'ita',ita:1,sub:'cru',f,tg,tm:0});return}
- if(r<.30&&ok&&tg.hp<tg.mx*.25){f.gcd=7.5;logS='Itachi · 20 CROWS!';logT=2.4;banner='Itachi raises his hands... the Sharingan awakens!';bannerT=2;fx.push({k:'ita',ita:1,sub:'brd',f,tg,tm:0});return}
- if(r<.6||!ok){f.gcd=5.2;logS='Itachi · SKY KUNAI & SHURIKEN!';logT=2.2;banner='Itachi LEVITATES... knives rain from above!';bannerT=1.6;fx.push({k:'ita',ita:1,f,tg,tm:0})}
- else{f.gcd=3.4;f.itm={tm:0,n:0};logS='Itachi · UCHIHA COMBO!';logT=1.8}}
-function stepItaFx(e,dt){if(e.sub=='cru')return stepItaCru(e,dt);if(e.sub=='brd')return stepItaBrd(e,dt);const f=e.f,g=e.tg,t=e.tm;
+function castIta(f,tg,r){f.anim=.4;const ok=!imm(tg)&&tg.cfx==null&&!tg.rise&&!tg.fly&&tg.down<1.5&&!tg.split&&!tg.rv;
+ const W2=[['sky',20],['quad',25],['combo',ok?20:0],['soil',ok?20:0],['moon',ok&&!f.cruU?15:0],['crow',ok?15:0]];
+ let x=Math.random()*W2.reduce((a,b)=>a+b[1],0),pick='sky';for(const[n,w]of W2){if(x<w){pick=n;break}x-=w}
+ if(pick=='moon'){f.cruU=1;f.gcd=9;logS='Itachi · BLOOD MOON TSUKUYOMI!';logT=2.6;banner='Itachi drags the enemy under the BLOOD MOON...';bannerT=2.2;fx.push({k:'ita',ita:1,sub:'cru',f,tg,tm:0})}
+ else if(pick=='crow'){f.gcd=7.5;logS='Itachi · 20 CROWS!';logT=2.4;banner='Itachi raises his hands... the Sharingan awakens!';bannerT=2;fx.push({k:'ita',ita:1,sub:'brd',f,tg,tm:0})}
+ else if(pick=='soil'){f.gcd=9;logS='Itachi · SOIL GRAB & BLACK FLAME!';logT=2.6;banner='Itachi dives into the SOIL...';bannerT=1.8;fx.push({k:'ita',ita:1,sub:'soil',f,tg,tm:0})}
+ else if(pick=='quad'){f.gcd=5;logS='Itachi · FOUR-WAY SHURIKEN!';logT=2.2;banner='Itachi becomes FOUR!';bannerT=1.6;fx.push({k:'ita',ita:1,sub:'quad',f,tg,tm:0})}
+ else if(pick=='combo'){f.gcd=3.4;f.itm={tm:0,n:0};logS='Itachi · UCHIHA COMBO!';logT=1.8}
+ else{f.gcd=5.2;logS='Itachi · SKY KUNAI & SHURIKEN!';logT=2.2;banner='Itachi LEVITATES... knives rain from above!';bannerT=1.6;fx.push({k:'ita',ita:1,f,tg,tm:0})}}
+function stepItaFx(e,dt){if(e.sub=='quad')return stepItaQuad(e,dt);if(e.sub=='soil')return stepItaSoil(e,dt);if(e.sub=='cru')return stepItaCru(e,dt);if(e.sub=='brd')return stepItaBrd(e,dt);const f=e.f,g=e.tg,t=e.tm;
  if(abortFx(e,f,g)||f.rv){f.ihv=0;return false}
  f.gcd=Math.max(f.gcd,1);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;if(e.n===undefined)e.n=0;
  f.ihv=t<3.9?205:0;
@@ -1661,7 +1665,7 @@ function drawItaMoon(){const e=fx.find(q=>q.ita&&q.sub=='cru'&&q.mo>0);if(!e)ret
 // ===== Itachi ULTI 2: 20 CROWS (enemy under 25% life) -> enemy explodes =====
 const CR_N=20,CR_T0=1.0,CR_X=5.1;
 function stepItaBrd(e,dt){const f=e.f,g=e.tg,t=e.tm;
- if(e.cr===undefined){e.cr=Array.from({length:CR_N},(_,i)=>({a:i/CR_N*6.283,hk:-1,x:f.x,y:G-90,px:f.x,py:G-90,rr:R(120,200)}));e.sx=f.x;e.h={}}
+ if(e.cr===undefined){e.cr=Array.from({length:CR_N},(_,i)=>({a:i/CR_N*6.283,hk:-1,x:f.x,y:G-90,px:f.x,py:G-90,rr:R(120,200)}));e.sx=f.x;e.h={};e.pk=0}
  const clean=()=>{f.al=undefined;f.cfx=null;f.ff=0;f.ihv=0};
  if(!e.ex&&(abortFx(e,f,g)||f.rv||imm(g))){clean();return false}
  if(e.ex&&phase!=='fight'){clean();return false}
@@ -1674,14 +1678,14 @@ function stepItaBrd(e,dt){const f=e.f,g=e.tg,t=e.tm;
   e.cr.forEach((c,i)=>{const P=.9+i*.012,ph=(t-CR_T0)/P+i/CR_N,k=Math.floor(ph),u=ph-k,w=u<.45?ez(u/.45):u<.55?1:1-ez((u-.55)/.45),a=c.a+t*1.3,
    ox=g.x+Math.cos(a)*c.rr,oy=G-150+Math.sin(a*1.3)*95,tx=g.x+Math.sin(i*2.1)*18,ty=G-95+Math.cos(i*1.7)*45,
    nx=ox+(tx-ox)*w,ny=oy+(ty-oy)*w;c.px=c.x;c.py=c.y;c.x=e.sx+(nx-e.sx)*s;c.y=(G-90)+(ny-(G-90))*s;
-   if(u>=.5&&c.hk!==k&&t>CR_T0+.55){c.hk=k;if(!g.dead&&!imm(g)&&phase==='fight'){g.hp=Math.max(1,g.hp-g.mx*.002);g.flash=.2;g.drip=Math.max(g.drip||0,3);spawn(g.x+R(-16,16),G-R(40,150),'#b3121a',6,5);spawn(g.x,G-90,'#150609',3,4);if(i%3==0)splat(g.x+R(-90,90),false,12);shake=Math.max(shake,2)}}})}
+   if(u>=.5&&c.hk!==k&&t>CR_T0+.55){c.hk=k;if(!g.dead&&!imm(g)&&phase==='fight'){if(e.pk<80){e.pk++;fixed(f,g,g.mx*.25/80,true)}g.flash=.2;g.drip=Math.max(g.drip||0,3);spawn(g.x+R(-16,16),G-R(40,150),'#b3121a',6,5);spawn(g.x,G-90,'#150609',3,4);if(i%3==0)splat(g.x+R(-90,90),false,12);shake=Math.max(shake,2)}}})}
  ev('bn',CR_T0+.9,()=>{banner='The crows tear at the enemy...';bannerT=1.8});
  if(t>=CR_X&&!e.ex){e.ex=true;f.al=0;
   spawn(g.x,G-90,'#b3121a',240,13);spawn(g.x,G-90,'#7a0a10',140,10);spawn(g.x,G-90,'#ff3a2a',90,11);spawn(g.x,G-90,'#fff',40,9);spawn(g.x,G-40,'#b3121a',100,9);
   for(let k=0;k<5;k++)splat(R(80,1000),true,16);for(let k=0;k<22;k++)spray(R(10,1070),R(10,520),R(12,44),12);redT=Math.max(redT,14);shake=30;envFlash=Math.max(envFlash,1);
   e.cr.forEach(c=>spawn(c.x,c.y,'#07070a',14,7));
-  banner='THE ENEMY EXPLODES!';bannerT=2;
-  if(fixed(f,g,Math.max(g.hp,500),true)){if(g.dead)g.al=0}}
+  banner='The crows scatter in a burst of blood!';bannerT=2;
+  while(e.pk<80){e.pk++;fixed(f,g,g.mx*.25/80,true)}if(!g.dead)g.down=Math.max(g.down,1.2)}
  if(t>=CR_X+.2){f.al=Math.min(1,(t-CR_X-.2)/.35);if(t>=CR_X+.6){clean();f.gcd=Math.max(f.gcd,R(.8,1.2));return false}}
  return true}
 function drawCrow(x,y,hx,hy,i){const fl=hx<0?-1:1,fw=Math.sin(time*30+i*1.3);ctx.save();ctx.translate(x,y);ctx.scale(fl,1);
@@ -1692,6 +1696,7 @@ function drawCrow(x,y,hx,hy,i){const fl=hx<0?-1:1,fw=Math.sin(time*30+i*1.3);ctx
  ctx.beginPath();ctx.arc(12,-3,5.5,0,7);ctx.fill();ctx.fillStyle='#caa24a';ctx.beginPath();ctx.moveTo(16,-4);ctx.lineTo(25,-1);ctx.lineTo(16,0);ctx.closePath();ctx.fill();
  ctx.fillStyle='#ff1a1a';ctx.beginPath();ctx.arc(13,-4,1.6,0,7);ctx.fill();ctx.restore()}
 function drawItaUlt(e){const f=e.f,g=e.tg,t=e.tm;
+ if(e.sub=='quad')return drawItaQuad(e);if(e.sub=='soil')return drawItaSoil(e);
  if(e.sub=='brd'){if(!e.cr||e.ex)return;if(t>=CR_T0)e.cr.forEach((c,i)=>drawCrow(c.x,c.y,c.x-c.px,c.y-c.py,i));return}
  if(e.gx===undefined||!e.sw)return;const gx=e.gx,cyy=G-95-(g.rise||0);
  if(e.cr>0){ctx.save();ctx.globalAlpha=e.cr;ctx.fillStyle='#ff2a2a';ctx.shadowColor='#f00';ctx.shadowBlur=12;[[-84,-53],[84,-53],[0,70]].forEach(([ox,oy])=>{ctx.beginPath();ctx.arc(gx+ox,cyy+oy+6,5,0,7);ctx.fill()});ctx.restore()}
@@ -1749,6 +1754,70 @@ function drawFoxUlt(e){if(e.gx===undefined)return;const f=e.f,g=e.tg,t=e.tm,gx=e
   ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.strokeStyle='#27324d';ctx.lineWidth=7*sf;ctx.beginPath();ctx.moveTo(hx,hy2);ctx.lineTo(kx,ky);ctx.lineTo(fx2,fy2);ctx.stroke();
   ctx.fillStyle='#ff8a1a';ctx.beginPath();ctx.ellipse(fx2+d*4*sf,fy2,10*sf,6*sf,0,0,7);ctx.fill();ctx.restore()}
  if(t>=3.1&&t<3.6){const a=1-(t-3.1)/.5,r=40+160*(1-a);ctx.save();ctx.globalCompositeOperation='lighter';const gr=ctx.createRadialGradient(g.x,G-100,0,g.x,G-100,r);gr.addColorStop(0,'rgba(255,250,210,'+a+')');gr.addColorStop(.4,'rgba(255,130,30,'+(.7*a)+')');gr.addColorStop(1,'rgba(180,20,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(g.x,G-100,r,0,7);ctx.fill();ctx.restore()}}
+
+// ===== Itachi: FOUR-WAY SHURIKEN =====
+function itaCloneDraw(f,x,face,rise,al,anim){ctx.save();ctx.globalAlpha=al;person({...f,x,y:G,face,anim,flash:0,dead:false,down:0,fly:false,jy:0,hole:false,clone:null,swarm:null,cloud:0,arm:0,giant:0,demon:0,burn:0,bk:0,hv:0,sink:0,shock:0,nohead:false,rise,rv:null,split:0,up:false,fl:0,sit:0,mlt:0,dnc:0,al:undefined,tree:null,whale:null,sw:null,tn:null,kk:null,fm:null,dk:null,sm:null,itm:null,vl:undefined,lite:0,dm:0,sp:0},false);ctx.restore()}
+function stepItaQuad(e,dt){const f=e.f,g=e.tg,t=e.tm;
+ if(e.q===undefined){e.gx=g.x;e.h={};e.n=0;e.q=[[-260,0],[260,0],[-150,210],[150,210]].map(([ox,r])=>({x:Math.max(40,Math.min(1040,e.gx+ox)),r,face:ox<0?1:-1,an:0}))}
+ if(abortFx(e,f,g)||f.rv){f.al=undefined;return false}
+ f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;
+ if(t<.4){f.anim=Math.max(f.anim,.2);if(Math.random()<.8)spawn(f.x+R(-18,18),G-R(20,150),'#ff2a2a',1,3)}
+ e.ca=t<.4?0:t<.8?(t-.4)/.4:t<3.3?1:Math.max(0,1-(t-3.3)/.3);
+ if(t>=.4&&t<3.6)f.al=0;
+ if(t>=.4&&!e.h.p){e.h.p=1;e.q.forEach(s=>{spawn(s.x,G-90-s.r,'#150609',24,6);spawn(s.x,G-90-s.r,'#ff2a2a',10,5)})}
+ while(e.n<16){const r=Math.floor(e.n/4),k=e.n%4,at=.9+r*.55+k*.07;if(t<at)break;e.n++;const s=e.q[k];s.an=.25;
+  projs.push({x:s.x+s.face*58,y:G-122-s.r,f,tg:g,dmg:6,col:'#cfd6de',t:16,sh:'star',nm:'Shuriken',a:0,sp:760,ty:G-100+R(-35,20)})}
+ e.q.forEach(s=>s.an=Math.max(0,s.an-dt));
+ if(t>=3.6){f.al=undefined;f.gcd=Math.max(f.gcd,R(.6,1));return false}
+ return true}
+function drawItaQuad(e){if(!e.q||e.ca<=0)return;e.q.forEach(s=>itaCloneDraw(e.f,s.x,s.face,s.r,.92*e.ca,s.an>0?.2:0))}
+
+// ===== Itachi: SOIL GRAB & BLACK FLAME =====
+function stepItaSoil(e,dt){const f=e.f,g=e.tg,t=e.tm;
+ if(e.gx===undefined){e.d=Math.sign(g.x-f.x)||1;e.gx=g.x;e.fx0=f.x;e.h={};e.bn=0;e.nt=0;e.hx=Math.max(60,Math.min(1020,e.gx-e.d*80))}
+ const d=e.d,gx=e.gx,ev=(k,at,fn)=>{if(t>=at&&!e.h[k]){e.h[k]=1;fn()}};
+ const cleanI=()=>{f.al=undefined;f.cfx=null;f.ff=0;f.ihv=0;if(!amb)f.rise=0};
+ const cleanG=()=>{g.vl=undefined;g.cfx=null};
+ if(!e.fd){
+  if(abortFx(e,f,g)||f.rv||(imm(g)&&!e.hit)){cleanI();cleanG();return false}
+  f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;f.kb=0;
+  if(t>=.3&&t<4.6){g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;g.gcd=Math.max(g.gcd,1.2);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.kb=0;g.fly=false;g.cfx=gx}
+  if(t>=1.5&&t<4.6){g.vl=1.5*(t<1.9?ez((t-1.5)/.4):1);g.down=0}
+  if(t<.4){f.al=Math.max(0,1-t/.4);f.anim=Math.max(f.anim,.2)}
+  else if(t<2.4)f.al=0;
+  else if(t<2.7)f.al=(t-2.4)/.3;else f.al=undefined;
+  if(t>=2.4){f.x=f.tx=e.hx;f.cfx=e.hx;f.ff=d;
+   f.rise=t<3.3?200+440*(1-ez((t-2.4)/.9)):t<4.6?200:200*(1-ez((t-4.6)/.5));
+   if(t>=3.3&&t<4.6)f.anim=Math.max(f.anim,.2)}
+  ev('a',.1,()=>{banner='Itachi dives into the SOIL...';bannerT=1.6;spawn(f.x,G+10,'#7a5230',40,6)});
+  ev('g',1.5,()=>{banner='Hands grab the enemy by the FEET!';bannerT=1.6;shake=Math.max(shake,8);spawn(gx,G+8,'#7a5230',40,6)});
+  ev('f',1.8,()=>{shake=Math.max(shake,12);spawn(gx,G,'#ddd',30,6)});
+  ev('d',2.4,()=>{banner='Itachi descends from above the screen!';bannerT=1.6});
+  ev('c',3.3,()=>{banner='BLACK FLAME!';bannerT=1.4});
+  if(t>=3.7&&!e.hit){e.hit=true;shake=Math.max(shake,16);envFlash=Math.max(envFlash,.4);spawn(gx,G-50,'#120410',60,9);spawn(gx,G-50,'#ff2a4a',30,8);fixed(f,g,g.mx*.05);g.chr=Math.max(g.chr,6)}
+  ev('rl',4.6,()=>{g.vl=undefined;g.cfx=null;g.down=Math.max(g.down,1.2)});
+  if(t>=5.1){e.fd=true;cleanI();f.gcd=Math.max(f.gcd,R(1,1.5))}
+ }else if(phase!=='fight'||g.dead)return false;
+ // black burn: 8 ticks x 2.5% over 4s (+5% on the hit = 25% total)
+ if(e.hit&&t>=3.8&&t<7.9&&e.nt<8){e.bn-=dt;if(e.bn<=0){e.bn=.5;e.nt++;fixed(f,g,g.mx*.025,true);spawn(g.x+R(-18,18),G-R(40,150),'#1a0612',8,5);spawn(g.x+R(-18,18),G-R(40,150),'#ff2a4a',4,4);g.chr=Math.max(g.chr,3)}}
+ return t<8.0}
+function blackFire(x,y,s){ctx.save();ctx.shadowColor='#ff2a5a';ctx.shadowBlur=14;for(let k=0;k<2;k++){ctx.fillStyle=k?'rgba(90,10,40,.8)':'rgba(8,2,12,.92)';const w=k?.7:1;for(let i=0;i<7;i++){const ph=i*1.7+k,bx=(i-3)*9*s*w,hh=(70+30*Math.sin(time*9+i*2.3))*s*w*(1-Math.abs(i-3)*.12),sw=Math.sin(time*7+ph)*14*s;ctx.beginPath();ctx.moveTo(x+bx-12*s*w,y);ctx.quadraticCurveTo(x+bx-10*s*w+sw*.4,y-hh*.55,x+bx+sw,y-hh-Math.sin(time*13+ph)*6);ctx.quadraticCurveTo(x+bx+10*s*w+sw*.4,y-hh*.55,x+bx+12*s*w,y);ctx.fill()}}ctx.restore()}
+function blackJet(hx,hy,tx,ty,u,fade){ctx.save();const dx=tx-hx,dy=ty-hy,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
+ for(let i=0;i<90;i++){const q=((i*.61803+time*2.4)%1)*u,w=Math.sin(time*13+i*3.1)*q*30+Math.sin(time*5+i)*q*14,px=hx+dx*q+nx*w,py=hy+dy*q+ny*w,r=9+q*48*(.7+.3*Math.sin(i*2.1));
+  const gr=ctx.createRadialGradient(px,py,0,px,py,r);gr.addColorStop(0,'rgba(6,0,10,'+(.85*fade)+')');gr.addColorStop(.6,'rgba(70,6,30,'+(.5*fade)+')');gr.addColorStop(1,'rgba(200,20,50,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(px,py,r,0,7);ctx.fill()}ctx.restore()}
+function drawItaSoil(e){if(e.gx===undefined)return;const f=e.f,g=e.tg,t=e.tm,gx=e.gx;
+ if(!e.fd){
+  if(t<.5){ctx.save();ctx.fillStyle='rgba(30,16,6,.8)';ctx.beginPath();ctx.ellipse(e.fx0,G+20,44*(1-t/.5)+8,12,0,0,7);ctx.fill();ctx.restore()}
+  if(t>=.4&&t<1.6){const u=ez((t-.5)/1),x=e.fx0+(gx-e.fx0)*u;ctx.save();ctx.strokeStyle='rgba(40,24,10,.8)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(e.fx0,G+22);ctx.lineTo(x,G+22);ctx.stroke();
+   ctx.fillStyle='#6b4a2a';ctx.strokeStyle='#3a2410';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(x,G+16,36,14,0,Math.PI,0);ctx.fill();ctx.stroke();ctx.restore();
+   if(Math.random()<.8)parts.push({x:x+R(-20,20),y:G+12,vx:R(-1,1),vy:R(-3,-1),l:.4,c:'#7a5230',r:R(2,5)})}
+  if(t>=1.4&&t<2.4){const p=t<2.2?ez((t-1.4)/.25):1-ez((t-2.2)/.2);ctx.save();ctx.lineCap='round';
+   [-14,14].forEach(ox=>{ctx.strokeStyle='#15131b';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(gx+ox,G+26);ctx.lineTo(gx+ox,G+26-56*p);ctx.stroke();ctx.fillStyle='#f2cfa5';ctx.beginPath();ctx.arc(gx+ox,G+26-56*p,8,0,7);ctx.fill();ctx.strokeStyle='#d9141f';ctx.lineWidth=2;ctx.beginPath();ctx.arc(gx+ox,G+26-56*p,10,0,7);ctx.stroke()});ctx.restore()}
+  if(t>=3.3&&t<4.6){const[hx,hy0]=hand(f),hy=hy0-(f.rise||0);
+   if(t<3.7){const p=(t-3.3)/.4,r=6+30*p;ctx.save();const gr=ctx.createRadialGradient(hx,hy,0,hx,hy,r*2);gr.addColorStop(0,'rgba(4,0,8,.95)');gr.addColorStop(.5,'rgba(120,10,40,.6)');gr.addColorStop(1,'rgba(255,30,60,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(hx,hy,r*2,0,7);ctx.fill();ctx.restore()}
+   else blackJet(hx,hy,g.x,G-45,Math.min(1,(t-3.7)/.2),t>4.2?Math.max(0,1-(t-4.2)/.4):1)}
+ }
+ if(e.hit&&t<7.9){ctx.save();ctx.globalAlpha=Math.min(1,(7.9-t)*2);blackFire(g.x,G+8,2*(g.sc/1.7));ctx.restore()}}
 
 let last=performance.now();
 function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop)}
