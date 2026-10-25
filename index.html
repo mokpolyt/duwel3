@@ -1028,11 +1028,11 @@ function drawPortal(x,y,r,a,rot){ctx.save();ctx.translate(x,y);ctx.globalAlpha=M
  ctx.restore()}
 // ---- casting ----
 function castDoc(f,tg,r){f.anim=.4;
- if(r>=.85&&(tg.hp>=tg.mx*.15||imm(tg)))r=.1;          // portal axe slice ONLY when enemy HP is under 15%
+ if(r>=.90&&(tg.hp>=tg.mx*.15||imm(tg)))r=.1;          // portal axe slice ONLY when enemy HP is under 15%
  if(r<.30){f.gcd=R(1,1.4);logS='Doctor Stings · Orange Ray Circle!';logT=1.6;fx.push({k:'dc',doc:'circle',f,tg,tm:0,hit:false})}
- else if(r<.55){f.gcd=3.2;f.dk={tm:0,n:0};logS='Doctor Stings · GLOWING COMBO!';logT=2;banner='Doctor Stings rushes in with GLOWING FISTS & FEET!';bannerT=1.5}
- else if(r<.67){f.gcd=9;logS='Doctor Stings · 10 SLEEP RINGS & 30 METEORS!';logT=2.6;banner='Doctor Stings FLOATS... nothing can touch him!';bannerT=1.8;fx.push({k:'dc',doc:'brace',f,tg,tm:0})}
- else if(r<.85){f.gcd=5.8;f.anim=.5;logS='Doctor Stings · RED ROPES & GIANT BEAR!';logT=2.6;banner='Glowing RED ROPES tie the enemy to the ground...';bannerT=2;fx.push({k:'dc',doc:'bear',f,tg,tm:0,hit:false})}
+ else if(r<.70){f.gcd=3.2;f.dk={tm:0,n:0};logS='Doctor Stings · GLOWING COMBO!';logT=2;banner='Doctor Stings rushes in with GLOWING FISTS & FEET!';bannerT=1.5}
+ else if(r<.80){f.gcd=9;logS='Doctor Stings · 10 SLEEP RINGS & 30 METEORS!';logT=2.6;banner='Doctor Stings FLOATS... nothing can touch him!';bannerT=1.8;fx.push({k:'dc',doc:'brace',f,tg,tm:0})}
+ else if(r<.90){f.gcd=5.8;f.anim=.5;logS='Doctor Stings · RED ROPES & GIANT BEAR!';logT=2.6;banner='Glowing RED ROPES tie the enemy to the ground...';bannerT=2;fx.push({k:'dc',doc:'bear',f,tg,tm:0,hit:false})}
  else{f.gcd=4.8;f.anim=.5;logS='Doctor Stings · PORTAL AXE SLICE!';logT=2.4;banner='Doctor Stings opens a PORTAL...';bannerT=1.8;fx.push({k:'dc',doc:'portal',f,tg,tm:0,hit:false})}}
 // ---- Doctor Stings: glowing punch/kick combo ----
 function docRushStep(f,i,dt){const w=f.dk,en=D[1-i];
