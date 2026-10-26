@@ -43,7 +43,7 @@ function mk(t){return{t,x:1200,y:G,sc:.85,tx:1200,ts:.85,hp:HP,mx:HP,cd:T[t].s.m
 function init(pk){mergeUsed=false;let ids=ROSTER.slice().sort(()=>Math.random()-.5);if(pk&&pk.length==2)ids=[pk[0],pk[1],...ids.filter(i=>i!=pk[0]&&i!=pk[1])];const o=ids.map(mk);D=[o[0],o[1]];Wt=[o[2],o[3],o[4],o[5]];benchQ=o.slice(6);
  D[0].x=D[0].tx=-100;D[1].x=D[1].tx=1180;Wt.forEach((w,i)=>w.x=w.tx=WS[i]);benchQ.forEach(b=>b.x=b.tx=1300);envI=ENVL[Math.floor(R(0,ENVL.length))];slots();start()}
 function slots(){D[0].tx=390;D[1].tx=690;D.forEach(d=>d.ts=1.7);Wt.forEach((w,i)=>{if(!w.helping){w.tx=WS[i];w.ts=.85}});benchQ.forEach(b=>b.tx=1300)}
-function start(){phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false}
+function start(){phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false;mergeUsed=false;mergeAt=R(5,12)}
 function sched(d,fn){timers.push({d,fn})}
 function spawn(x,y,c,n,sp=3){for(let i=0;i<n;i++)parts.push({x,y,vx:R(-sp,sp),vy:R(-sp,sp*.6),l:R(.3,.9),c,r:R(2,5)})}
 function txt(x,y,s,c){texts.push({x,y,s,c,l:1.1})}
@@ -2358,11 +2358,14 @@ function drawKunti(e){if(e.d===undefined)return;const t=e.tm,P=kuntiPose(e);if(P
  if(t>=1.0&&t<7.4){const tt=t<7.0?Math.min(.5,t-1.0):.8+(t-7.0);drawJet({f:e.f,tg:e.tg,tm:tt},[P.mx,P.my])}}
 
 // ===== MERGED TECHNIQUE (Byakuya vs Javanese Mage, once per game): GIANT FUCHSIA GHOST LADY + PINK PETALS hurt BOTH for 6s =====
+let mergeAt=8;
 function mergeTick(dt){
- if(mergeUsed||phase!=='fight'||amb||rescue||dur<12||fx.length)return;
- const a=D.find(x=>x.t===12),b=D.find(x=>x.t===8);if(!a||!b||a.dead||b.dead)return;
- if([a,b].some(q=>q.cfx!=null||q.rise>0||q.fly||q.down>.3||q.split>0||q.rv||imm(q)||q.sw||q.tn||q.kk||q.fm||q.dk||q.sm||q.itm||q.cloud>0||q.hp<q.mx*.3))return;
- if(Math.random()>dt*.12)return;
+ if(mergeUsed||phase!=='fight'||amb||rescue||dur<mergeAt)return;
+ const a=D.find(x=>x.t===12),b=D.find(x=>x.t===8);if(!a||!b||a.dead||b.dead){return}
+ const busy=[a,b].some(q=>q.cfx!=null||q.rise>0||q.fly||q.down>.3||q.split>0||q.rv||imm(q)||q.sw||q.tn||q.kk||q.fm||q.dk||q.sm||q.itm||q.cloud>0);
+ const force=dur>=mergeAt+10;
+ if((busy||fx.length)&&!force)return;
+ if(force){fx=[];projs=[];[a,b].forEach(q=>{q.cfx=null;q.rise=0;q.fly=false;q.split=0;q.sw=q.tn=q.kk=q.fm=q.dk=q.sm=q.itm=null;q.cloud=0;q.arm=0;q.giant=0;q.down=0;q.swarm=null;q.tree=null;q.whale=null;q.demon=0;q.shock=0;q.sit=0;q.sitU=0;q.afl=0})}
  mergeUsed=true;fx.push({k:'Mg',a,b,f:a,tg:b,tm:0,pt:[],sp:0,tk:0,h:{},ca:0});
 }
 function stepMerge(e,dt){const A=e.a,B=e.b,t=e.tm,TE=8.2,P=[A,B];
