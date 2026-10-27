@@ -41,9 +41,11 @@ let mergeUsed=false,amb=null,ambUsed=false,dark=0,sprays=[],redT=0,holes=[],head
 let D,Wt,benchQ=[],craters=[],stains=[],lavaPools=[],nails=[],tombs=[],timers=[],projs=[],fx=[],parts=[],texts=[],logT=0,logS='',banner='',bannerT=0;
 function mk(t){return{t,x:1200,y:G,sc:.85,tx:1200,ts:.85,hp:HP,mx:HP,cd:T[t].s.map(()=>R(.5,3)),gcd:1.5,anim:0,flash:0,dead:false,dt:0,ph:R(0,6),rolled:false,helping:false,face:1,jy:0,jv:0,jt:R(1,3),down:0,kb:0,hole:false,fly:false,clone:null,tcd:R(3,6),deaths:0,hv:0,h0:HP,tomb:false,arm:0,giant:0,gr:0,df:null,tr:R(2,7),cloud:0,demon:0,dr:0,tail:0,shock:0,st:0,shocker:null,nohead:false,sink:0,hole2:false,swarm:null,burn:0,bt:0,burnBy:null,chr:0,bk:0,cy:0,bleed:0,bld:0,bleedBy:null,sw:null,tn:null,kk:null,fm:null,sm:null}}
 function init(pk){mergeUsed=false;let ids=ROSTER.slice().sort(()=>Math.random()-.5);if(pk&&pk.length==2)ids=[pk[0],pk[1],...ids.filter(i=>i!=pk[0]&&i!=pk[1])];const o=ids.map(mk);D=[o[0],o[1]];Wt=[o[2],o[3],o[4],o[5]];benchQ=o.slice(6);
- D[0].x=D[0].tx=-100;D[1].x=D[1].tx=1180;Wt.forEach((w,i)=>w.x=w.tx=WS[i]);benchQ.forEach(b=>b.x=b.tx=1300);envI=ENVL[Math.floor(R(0,ENVL.length))];slots();start()}
+ D[0].x=D[0].tx=-100;D[1].x=D[1].tx=1180;Wt.forEach((w,i)=>w.x=w.tx=WS[i]);benchQ.forEach(b=>b.x=b.tx=1300);envI=ENVL[Math.floor(R(0,ENVL.length))];duelN=0;slots();start()}
 function slots(){D[0].tx=390;D[1].tx=690;D.forEach(d=>d.ts=1.7);Wt.forEach((w,i)=>{if(!w.helping){w.tx=WS[i];w.ts=.85}});benchQ.forEach(b=>b.tx=1300)}
-function start(){phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.gw=0;d.wst=0;d.wlau=0;d.wlh=0;d.wbat=null;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false;mergeUsed=false;mergeAt=R(5,12);spiderUsed=false;spiderAt=R(6,14);mtUsed=false}
+let duelN=0,btnT=0;const FB=[430,486,220,40];
+function fullLifeAll(){[...D,...Wt,...benchQ].forEach(f=>{if(f&&!f.dead&&!f.tomb){f.hp=f.mx;f.h0=f.mx}});btnT=0;banner='FULL LIFE! Every fighter is restored!';bannerT=2;shake=Math.max(shake,6)}
+function start(){duelN++;btnT=duelN>=2?4:0;phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.gw=0;d.wst=0;d.wlau=0;d.wlh=0;d.wbat=null;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false;mergeUsed=false;mergeAt=R(5,12);spiderUsed=false;spiderAt=R(6,14);mtUsed=false}
 function sched(d,fn){timers.push({d,fn})}
 function spawn(x,y,c,n,sp=3){for(let i=0;i<n;i++)parts.push({x,y,vx:R(-sp,sp),vy:R(-sp,sp*.6),l:R(.3,.9),c,r:R(2,5)})}
 function txt(x,y,s,c){texts.push({x,y,s,c,l:1.1})}
@@ -711,7 +713,7 @@ function drawFlash(e){if(e.sx===undefined)return;const f=e.f,t=e.tm;
 function splitDraw(d){const o=d.split,ang=Math.min(.55,o*.0085),x=d.x,py=G+10;
  [-1,1].forEach(sd=>{ctx.save();ctx.beginPath();ctx.rect(sd<0?x-300:x,0,300,H);ctx.clip();ctx.translate(x+sd*o*.55,py);ctx.rotate(sd*ang);ctx.translate(-x,-py);person({...d,dead:false,down:0,flash:0,fly:false,jy:0},false);ctx.restore()})}
 
-function update(dt){time+=dt;if(!fx.some(e=>e.k=='T'))dark=Math.max(0,dark-dt*2);if(phase=='menu')return;envT+=dt;redT=Math.max(0,redT-dt);
+function update(dt){time+=dt;if(!fx.some(e=>e.k=='T'))dark=Math.max(0,dark-dt*2);if(phase=='menu')return;if(btnT>0)btnT=Math.max(0,btnT-dt);envT+=dt;redT=Math.max(0,redT-dt);
  if(envT>=17){envT=0;let n;do n=ENVL[Math.floor(R(0,ENVL.length))];while(n==envI);envI=n;envFlash=1;banner='Arena shifts: '+E[n]+' favours '+favNames(n);bannerT=3}
  envFlash=Math.max(0,envFlash-dt*1.5);itaEye=Math.max(0,itaEye-dt);if(envI==2){lightning-=dt;if(lightning<-R(1.5,4))lightning=.25}
  bannerT-=dt;logT-=dt;
@@ -1206,7 +1208,8 @@ function draw(){if(phase=='menu'){drawMenu();return}ctx.save();if(shake>.1)ctx.t
  ctx.font='13px Georgia,serif';ctx.fillStyle='#fff';ctx.fillText('Favours '+favNames(envI)+' · duel '+Math.floor(dur)+'s',540,70);
  if(logT>0){ctx.globalAlpha=Math.min(1,logT);ctx.font='italic 600 18px Georgia,serif';ctx.strokeText(logS,540,96);ctx.fillText(logS,540,96);ctx.globalAlpha=1}
  if(bannerT>0){ctx.globalAlpha=Math.min(1,bannerT);ctx.font='bold 34px Georgia,serif';ctx.strokeStyle='#000';ctx.lineWidth=6;ctx.strokeText(banner,540,230);ctx.fillStyle='#ffe9a8';ctx.fillText(banner,540,230);ctx.globalAlpha=1}
- if(phase=='over'){ctx.font='18px Georgia,serif';ctx.fillStyle='#fff';ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeText('Tap to play again',540,270);ctx.fillText('Tap to play again',540,270)}ctx.restore();
+ if(phase=='over'){ctx.font='18px Georgia,serif';ctx.fillStyle='#fff';ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeText('Tap to play again',540,270);ctx.fillText('Tap to play again',540,270)}
+ if(btnT>0&&phase!=='over'){const a=Math.min(1,btnT*3,(4-btnT)*6+.4),pu=1+.04*Math.sin(time*10);ctx.save();ctx.globalAlpha=a;ctx.translate(FB[0]+FB[2]/2,FB[1]+FB[3]/2);ctx.scale(pu,pu);ctx.fillStyle='#1fae52';ctx.strokeStyle='#eaffef';ctx.lineWidth=3;ctx.shadowColor='#2dff7a';ctx.shadowBlur=16;ctx.beginPath();ctx.roundRect(-FB[2]/2,-FB[3]/2,FB[2],FB[3],10);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='bold 18px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('FULL LIFE ALL',0,-3);ctx.fillStyle='rgba(255,255,255,.85)';ctx.fillRect(-FB[2]/2+10,FB[3]/2-8,(FB[2]-20)*btnT/4,3);ctx.restore()}ctx.restore();
 }
 // ---------- opening screen ----------
 let menuSel=[],menuHover=-1;
@@ -1667,7 +1670,7 @@ function menuClick(x,y){const c=cardAt(x,y);
  if(menuSel.length==2&&inR(x,y,BS)){const pk=menuSel.slice();menuSel=[];init(pk)}}
 function mpos(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
 cv.addEventListener('pointermove',e=>{if(phase!=='menu')return;const[x,y]=mpos(e);menuHover=cardAt(x,y);cv.style.cursor=menuHover>=0||inR(x,y,BR)||(menuSel.length==2&&inR(x,y,BS))?'pointer':'default'});
-cv.addEventListener('pointerdown',e=>{if(phase=='over'){restart();return}if(phase!=='menu')return;const[x,y]=mpos(e);if(e.pointerType!=='mouse')menuHover=-1;menuClick(x,y)});
+cv.addEventListener('pointerdown',e=>{if(btnT>0&&phase!=='menu'&&phase!=='over'){const[bx,by]=mpos(e);if(inR(bx,by,FB)){fullLifeAll();return}}if(phase=='over'){restart();return}if(phase!=='menu')return;const[x,y]=mpos(e);if(e.pointerType!=='mouse')menuHover=-1;menuClick(x,y)});
 // ===== Thunder Bender ULTI: THUNDER RUSH =====
 // run fast (electric trails) > face punches (fall back) > back-of-head punches (fall forward)
 // > kicks up to the top corner > LIGHTNING ARROW > blood dripping
