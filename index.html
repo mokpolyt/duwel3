@@ -228,9 +228,9 @@ function cast2(f,tg){const r=Math.random();f.anim=.4;
   let m=r<.34?0:r<.60?1:r<.80?2:r<.90?3:4;if(m>=3&&(imm(tg)||tg.cfx!=null||tg.down>1.5||tg.rise>0||tg.fly||tg.split>0||tg.rv||amb))m=0;
   if(m==0){f.gcd=R(.9,1.3);sched(.1,()=>{const[a,b]=hand(f);projs.push({x:a,y:b,f,tg,dmg:15,col:'#e3e8ee',t:10,sh:'sickle',blood:1,nm:'Sickle',a:0,sp:700})})}
   else if(m==1){f.gcd=R(1,1.4);sched(.1,()=>{const[a,b]=hand(f);projs.push({x:a,y:b,f,tg,dmg:13,col:'#ffb6d9',t:10,sh:'bunny',nm:'Rabbit Doll',a:0,sp:600})})}
-  else if(m==2){f.gcd=3;f.kk={tm:0,n:0};banner='Woman Bender rushes in to KICK!';bannerT=1.4}
+  else if(m==2){f.gcd=3;f.kk={tm:0,n:0}}
   else if(m==3){f.gcd=6;f.anim=.5;fx.push({k:'K',f,tg,tm:0})}
-  else{f.gcd=9.5;f.anim=0;logS='Woman Bender · UZI BARRAGE & BAZOOKA!';logT=2.8;banner='Woman Bender GROWS... and turns her BACK!';bannerT=2;fx.push({k:'Ug',f,tg,tm:0})}
+  else{f.gcd=10.5;f.anim=0;fx.push({k:'Ug',f,tg,tm:0})}
  }}
 function tentStep(f,i,dt){const w=f.tn,en=D[1-i];
  if(f.dead||en.dead||phase!=='fight'||(amb&&amb.pause)){f.tn=null;f.cfx=null;return}
@@ -1257,7 +1257,7 @@ function maybeLaunch(f,g){
  if(Math.random()>=.3||g.dead||phase!=='fight'||imm(g)||g.rise>0||g.fly||g.cfx!=null||g.split>0||g.rv||amb||fx.some(e=>e.k=='J'&&e.tg===g))return false;
  g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;g.kb=0;g.jy=0;g.jv=0;
  fx.push({k:'J',f,tg:g,tm:0,d:Math.sign(g.x-f.x)||1,x0:g.x,h:{},tr:[]});
- banner='SENT FLYING!';bannerT=1.5;logS=BN(f.t)+' · LAUNCH!';logT=1.6;spawn(g.x,G-90,'#fff',30,8);shake=Math.max(shake,10);return true}
+ if(f.t!==10){banner='SENT FLYING!';bannerT=1.5;logS=BN(f.t)+' · LAUNCH!';logT=1.6}spawn(g.x,G-90,'#fff',30,8);shake=Math.max(shake,10);return true}
 function launchPath(e){const d=e.d,wall=d>0?1030:50,c=x=>Math.max(50,Math.min(1030,x));
  return[[0,e.x0,0],[.3,c(e.x0+d*170),285],[.65,wall,170],[1,c(wall-d*230),0],[1.45,c(wall-d*430),285],[1.95,c(wall-d*560),0]]}
 function stepLaunch(e,dt){const f=e.f,g=e.tg,t=e.tm;
@@ -2486,43 +2486,44 @@ function drawSpiderFx(e){if(e.px===undefined)return;const P=D,t=e.tm,S=2.4,face=
  ctx.restore()}
 
 // ===== Woman Bender: grows, turns her BACK, 2 UZIS for 5s, then BAZOOKA (enemy bleeds) =====
-const UZ={GR:.9,S0:1.0,S1:6.0,BZ:7.2,HIT:7.7,END:8.9};
+const UZ={GR:.9,S0:1.9,S1:6.9,BZ:8.1,HIT:8.6,END:9.8,W0:.5,W1:1.7};
 function uziPose(e){const f=e.f,g=e.tg,s=f.sc*(1+.75*(f.gw||0)),sx=f.x,sy=f.y+(f.jy||0)-(f.rise||0)-66*s,ang=Math.atan2(G-90-sy,g.x-sx),ks=s/1.7,c=Math.cos(ang),sn=Math.sin(ang);
  return{s,ks,sx,sy,ang,c,sn,hands:[[sx+c*44*ks-sn*9*ks,sy+sn*44*ks+c*9*ks],[sx+c*44*ks+sn*9*ks,sy+sn*44*ks-c*9*ks]]}}
 function stepUzi(e,dt){const f=e.f,g=e.tg,t=e.tm;
- if(e.d===undefined){e.d=Math.sign(g.x-f.x)||1;e.fx0=f.x;e.gx=g.x;e.h={};e.hn=0;e.bl=[]}
- const d=e.d,cl=()=>{f.gw=0;f.ff=0;f.cfx=null;if(g.cfx===e.gx)g.cfx=null};
+ if(e.d===undefined){e.d=Math.sign(g.x-f.x)||1;e.fx0=f.x;e.gx=g.x;e.h={};e.hn=0;e.bl=[];{const st=Math.max(60,Math.min(1020,g.x-e.d*250));e.wx=(st-f.x)*e.d>0?st:f.x}}
+ const d=e.d,cl=()=>{f.gw=0;f.ff=0;f.cfx=null;f.wlh=0;if(g.cfx===e.gx)g.cfx=null};
  if(!e.hit&&(abortFx(e,f,g)||f.rv||g.rv)){cl();return false}
  if(e.hit&&phase!=='fight'){cl();return false}
  if(t>=UZ.END){cl();f.gcd=Math.max(f.gcd,R(1,1.5));return false}
  const ev=(k,at,fn)=>{if(t>=at&&!e.h[k]){e.h[k]=1;fn()}};
- f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;f.anim=0;f.kb=0;f.cfx=e.fx0;
+ f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;f.anim=0;f.kb=0;
+ {const wu=ez((t-UZ.W0)/(UZ.W1-UZ.W0));f.cfx=e.fx0+(e.wx-e.fx0)*wu;f.wlh=(t>=UZ.W0&&t<UZ.W1+.1)?Math.abs(Math.sin(time*10))*6:0}
  f.gw=t<UZ.GR?ez(t/UZ.GR):t<UZ.HIT+.6?1:1-ez((t-UZ.HIT-.6)/.5);
  f.ff=t>=.4&&t<UZ.HIT+.7?-d:0;
  if(t>=.3&&t<UZ.HIT&&!g.dead){g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;g.gcd=Math.max(g.gcd,1.2);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.kb=0;g.fly=false;g.down=0;g.cfx=e.gx}
  else if(t>=UZ.HIT&&g.cfx===e.gx)g.cfx=null;
  if(t<UZ.GR&&Math.random()<.7)parts.push({x:f.x+R(-50,50),y:G-R(20,220),vx:R(-.5,.5),vy:-1.5,l:.6,c:'#ff2bd6',r:R(2,4)});
  ev('b0',.1,()=>{shake=Math.max(shake,6);spawn(f.x,G-60,'#ff2bd6',40,6)});
- ev('b1',.45,()=>{banner='She turns her BACK and pulls out TWO UZIS!';bannerT=1.8;shake=Math.max(shake,8);spawn(f.x,G-110,'#ff2bd6',30,7)});
- ev('b2',UZ.S1,()=>{banner='Uzis down... a BAZOOKA!';bannerT=1.6;const P=uziPose(e);spawn(P.hands[0][0],P.hands[0][1],'#ffd060',20,6)});
+ ev('b1',.45,()=>{shake=Math.max(shake,8);spawn(f.x,G-110,'#ff2bd6',30,7)});
+ ev('b2',UZ.S1,()=>{const P=uziPose(e);spawn(P.hands[0][0],P.hands[0][1],'#ffd060',20,6)});
  while(e.hn<60&&t>=UZ.S0+e.hn*(UZ.S1-UZ.S0)/60){const i=e.hn%2,P=uziPose(e),h=P.hands[i],mx=h[0]+P.c*30*P.ks,my=h[1]+P.sn*30*P.ks,tx=g.x+R(-22,22),ty=G-R(45,150)-(g.rise||0);e.hn++;
   e.bl.push({x0:mx,y0:my,x1:tx,y1:ty,t0:t});parts.push({x:mx,y:my,vx:R(-1,1),vy:R(-3,-1),l:.5,c:'#d9b53a',r:2});
   if(fixed(f,g,g.mx*.16/60,true)){spawn(tx,ty,'#b3121a',5,4);spawn(tx,ty,'#ffe9a0',2,3);if(e.hn%6==0){splat(g.x+R(-90,90),false,10);g.drip=Math.max(g.drip||0,2)}if(e.hn%10==0)shake=Math.max(shake,4)}else spawn(tx,ty,'#fff',3,3)}
  e.bl=e.bl.filter(b=>t-b.t0<.15);
- ev('fire',UZ.BZ,()=>{const P=uziPose(e),mx=P.sx+P.c*150*P.ks,my=P.sy+P.sn*150*P.ks;e.rk={mx,my};shake=Math.max(shake,14);envFlash=Math.max(envFlash,.4);spawn(mx,my,'#ffd060',50,9);spawn(mx,my,'#999',30,5);spawn(P.sx-P.c*20*P.ks,P.sy-P.sn*20*P.ks,'#aaa',30,6);banner='BAZOOKA!';bannerT=1.2});
+ ev('fire',UZ.BZ,()=>{const P=uziPose(e),mx=P.sx+P.c*150*P.ks,my=P.sy+P.sn*150*P.ks;e.rk={mx,my};shake=Math.max(shake,14);envFlash=Math.max(envFlash,.4);spawn(mx,my,'#ffd060',50,9);spawn(mx,my,'#999',30,5);spawn(P.sx-P.c*20*P.ks,P.sy-P.sn*20*P.ks,'#aaa',30,6)});
  if(e.rk&&!e.hit){const u=Math.min(1,(t-UZ.BZ)/(UZ.HIT-UZ.BZ));e.rx=e.rk.mx+(g.x-e.rk.mx)*u;e.ry=e.rk.my+(G-90-e.rk.my)*u;if(Math.random()<.9)parts.push({x:e.rx,y:e.ry,vx:R(-1,1),vy:R(-1,1),l:.6,c:Math.random()<.5?'#ff9a2a':'#bbb',r:R(3,7)})}
  if(t>=UZ.HIT&&!e.hit){e.hit=true;const hit=!imm(g)&&phase==='fight';
   shake=30;envFlash=Math.max(envFlash,.8);spawn(g.x,G-90,'#ff9a20',100,11);spawn(g.x,G-90,'#444',60,8);spawn(g.x,G-90,'#fff',30,7);
   fixed(f,g,70);
   if(hit){spawn(g.x,G-90,'#b3121a',200,12);spawn(g.x,G-40,'#7a0a10',100,9);splat(g.x,true,18);splat(g.x+R(-150,150),true,18);splat(g.x+R(-200,200),true,18);redT=Math.max(redT,14);
-   if(!g.dead){g.kb=d*520;g.down=Math.max(g.down,1.6);g.bleed=9;g.bld=.1;g.bleedBy=f;g.drip=Math.max(g.drip||0,8);banner='BAZOOKA HIT! The enemy is BLEEDING!';bannerT=2}}}
+   if(!g.dead){g.kb=d*520;g.down=Math.max(g.down,1.6);g.bleed=9;g.bld=.1;g.bleedBy=f;g.drip=Math.max(g.drip||0,8)}}}
  return true}
 function drawUzi(e){if(e.d===undefined||!e.bl)return;const f=e.f,g=e.tg,t=e.tm,P=uziPose(e),ks=P.ks,gw=f.gw||0;
  if(gw>.02){ctx.save();ctx.globalCompositeOperation='lighter';const r=170*(.5+gw*.5),cy=P.sy+30*ks,gr=ctx.createRadialGradient(f.x,cy,10,f.x,cy,r);gr.addColorStop(0,'rgba(255,43,214,'+(.18*gw)+')');gr.addColorStop(1,'rgba(255,43,214,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(f.x,cy,r,0,7);ctx.fill();ctx.restore()}
  ctx.save();ctx.lineCap='round';ctx.globalCompositeOperation='lighter';
  e.bl.forEach(b=>{const u=(t-b.t0)/.12,h=Math.min(1,u*1.4),tl=Math.max(0,h-.35);ctx.strokeStyle='rgba(255,230,150,.9)';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(b.x0+(b.x1-b.x0)*tl,b.y0+(b.y1-b.y0)*tl);ctx.lineTo(b.x0+(b.x1-b.x0)*h,b.y0+(b.y1-b.y0)*h);ctx.stroke()});
  ctx.restore();
- if(t>=.7&&t<UZ.HIT+.35){ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+ if(t>=1.3&&t<UZ.HIT+.35){ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
   if(t<UZ.S1){const firing=t>=UZ.S0;
    P.hands.forEach((h,i)=>{ctx.strokeStyle=SKIN;ctx.lineWidth=6*ks;ctx.beginPath();ctx.moveTo(P.sx,P.sy);ctx.lineTo(h[0],h[1]);ctx.stroke();
     ctx.save();ctx.translate(h[0],h[1]);ctx.rotate(P.ang);ctx.fillStyle='#2b2f36';ctx.strokeStyle='#0c0e12';ctx.lineWidth=1.6;
