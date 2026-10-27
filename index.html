@@ -985,11 +985,11 @@ function sailHair(f){const g=f?(f.gzs>0?Math.min(1,f.gzs):f.giant>0?1:0):0;ctx.s
  ctx.beginPath();ctx.moveTo(8,-92);ctx.quadraticCurveTo(24,-84,22,-52);ctx.lineTo(14,-54);ctx.quadraticCurveTo(14,-76,2,-86);ctx.closePath();ctx.fill();
  ctx.fillStyle=f&&f.mbk>0?'#0b0b0f':'#e0245a';ctx.beginPath();ctx.arc(-12,-93,4,0,7);ctx.fill();ctx.restore()}
 function castSail(f,tg,r){f.anim=.4;const free=!imm(tg)&&tg.cfx==null&&!tg.rise&&!tg.fly&&tg.down<1.5&&!tg.split&&!tg.rv&&!amb;
- if(r<.26){f.gcd=R(.9,1.3);logS='Sailor Bender · Yellow Sickle!';logT=1.6;sched(.1,()=>{const[a,b]=hand(f);projs.push({x:a,y:b,f,tg,dmg:11,col:'#ffd84a',t:13,sh:'ysickle',blood:1,nm:'Yellow Sickle',a:0,sp:720})})}
- else if(r<.56){f.gcd=3;f.kk={tm:0,n:0};logS='Sailor Bender · FLYING KICKS!';logT=2;banner='Sailor Bender rushes in to KICK!';bannerT=1.4}
- else if(r<.70){f.gcd=7;f.anim=.5;logS='Sailor Bender · 70 SICKLE MOONS!';logT=2.4;banner='Sailor Bender grows GIANT and backs away...';bannerT=2;fx.push({k:'F',f,tg,tm:0,fin:false})}
- else if(r<.80||!free){f.gcd=5.4;f.anim=.5;logS='Sailor Bender · MOON FALL!';logT=2.4;banner='Sailor Bender calls down the MOON!';bannerT=2;fx.push({k:'O',f,tg,tm:0,hit:false})}
- else if(r<.90){f.gcd=7;f.anim=.5;logS='Sailor Bender · GOLD CHAINS SLAM!';logT=2.6;banner='Sailor Bender throws long YELLOW CHAINS!';bannerT=2;fx.push({k:'Ch',f,tg,tm:0,hit:false})}
+ if(r<.16){f.gcd=R(.9,1.3);logS='Sailor Bender · Yellow Sickle!';logT=1.6;sched(.1,()=>{const[a,b]=hand(f);projs.push({x:a,y:b,f,tg,dmg:11,col:'#ffd84a',t:13,sh:'ysickle',blood:1,nm:'Yellow Sickle',a:0,sp:720})})}
+ else if(r<.46){f.gcd=3;f.kk={tm:0,n:0};logS='Sailor Bender · FLYING KICKS!';logT=2;banner='Sailor Bender rushes in to KICK!';bannerT=1.4}
+ else if(r<.60){f.gcd=7;f.anim=.5;logS='Sailor Bender · 70 SICKLE MOONS!';logT=2.4;banner='Sailor Bender grows GIANT and backs away...';bannerT=2;fx.push({k:'F',f,tg,tm:0,fin:false})}
+ else if(r<.65||!free){f.gcd=5.4;f.anim=.5;logS='Sailor Bender · MOON FALL!';logT=2.4;banner='Sailor Bender calls down the MOON!';bannerT=2;fx.push({k:'O',f,tg,tm:0,hit:false})}
+ else if(r<.80){f.gcd=7;f.anim=.5;logS='Sailor Bender · GOLD CHAINS SLAM!';logT=2.6;banner='Sailor Bender throws long YELLOW CHAINS!';bannerT=2;fx.push({k:'Ch',f,tg,tm:0,hit:false})}
  else{f.gcd=8;f.anim=.5;logS='Sailor Bender · BLACK RIDER!';logT=2.6;banner='Sailor Bender turns ALL BLACK...';bannerT=2;fx.push({k:'Mb',f,tg,tm:0,hit:false})}}
 function stepFireGiant(e,dt){const f=e.f,g=e.tg;
  const end=()=>{f.gzs=0;f.cfx=null};
