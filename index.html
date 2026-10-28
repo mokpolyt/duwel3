@@ -389,6 +389,7 @@ function cast(f,tg){if(f.tr<=0){if(f.t==5&&Math.random()<.12){f.arm=7;f.tr=R(14,
  else if(f.t==2&&Math.random()<.2){f.tr=R(14,20);f.gcd=7;f.anim=.6;logS='Thunder Bender · SPEAR STORM!';logT=2.4;banner='THUNDER RAINS over the whole arena...';bannerT=2.2;fx.push({k:'Y',f,tg,tm:0,bolts:[],nb:0,sp:null,fl:false,hits:0,fin:false,endT:0});return}
  else if(f.t==10&&!imm(tg)&&tg.cfx==null&&tg.down<1&&!tg.rise&&!tg.fly&&!tg.sw&&!tg.tn&&!tg.kk&&!tg.fm&&!tg.dk&&!tg.sm&&!amb&&!f.wbat&&f.cfx==null&&!f.kk&&Math.random()<.28){f.tr=R(15,22);f.gcd=9.5;f.anim=0;fx.push({k:'Bt',f,tg,tm:0});return}
  else if(f.t==10&&!imm(tg)&&tg.cfx==null&&tg.down<1&&!tg.rise&&!tg.fly&&!tg.sw&&!tg.tn&&!tg.kk&&!tg.fm&&!tg.dk&&!tg.sm&&!amb&&!f.wbat&&f.cfx==null&&!f.kk&&Math.random()<(f.qzDone?.25:Math.min(.9,.25+dur*.012))){f.tr=R(15,22);f.gcd=12;f.anim=0;logS='Woman Bender · MOOD QUIZ!';logT=2.4;banner='Woman Bender makes a MOOD QUIZ!';bannerT=1.8;fx.push({k:'Qz',f,tg,tm:0});return}
+ else if(f.t==11&&!imm(tg)&&tg.cfx==null&&tg.down<1&&!tg.rise&&!tg.fly&&!tg.sw&&!tg.tn&&!tg.kk&&!tg.fm&&!tg.dk&&!tg.sm&&!amb&&!f.wbat&&f.cfx==null&&!f.kk&&Math.random()<(f.qzDone?.25:Math.min(.9,.25+dur*.012))){f.tr=R(15,22);f.gcd=12;f.anim=0;logS='Naburo Bender · MOOD QUIZ!';logT=2.4;banner='Naburo Bender makes a MOOD QUIZ!';bannerT=1.8;fx.push({k:'Qz',f,tg,tm:0});return}
  else if(f.t==6&&!imm(tg)&&tg.cfx==null&&tg.down<1&&!tg.rise&&!tg.fly&&!tg.sw&&!tg.tn&&!tg.kk&&!tg.fm&&!tg.dk&&!tg.sm&&!amb&&!f.wbat&&f.cfx==null&&!f.kk&&Math.random()<(f.qzDone?.25:Math.min(.9,.25+dur*.012))){f.tr=R(15,22);f.gcd=12;f.anim=0;logS='Water Bender · MOOD QUIZ!';logT=2.4;banner='Water Bender makes a MOOD QUIZ!';bannerT=1.8;fx.push({k:'Qz',f,tg,tm:0});return}
  else if(f.t==4&&Math.random()<.18){f.cloud=6.2;f.tr=R(14,20);f.gcd=6;banner='Air Bender becomes a CLOUD above the enemy!';bannerT=2;logS='Air Bender · ICE NAIL RAIN!';logT=2;spawn(f.x,G-90,'#ffffff',40,5);iceRain(f,tg);return}
  else if(f.t==4&&Math.random()<.2317){f.tr=R(14,20);f.gcd=R(1.2,1.6);f.anim=.5;f.swarm={life:6,cl:[0,1,2,3,4].map(()=>({cd:R(.1,.6),p:0}))};banner='Air Bender splits into 5 CLONES!';bannerT=2;logS='Air Bender · CLONE ASSAULT!';logT=2;spawn(tg.x,G-110,'#ffffff',50,6);return}
@@ -3012,25 +3013,26 @@ function drawBatFx(e){const f=e.f,t=e.tm,w=Math.max(f.gw||0,f.wst||0);ctx.save()
  ctx.restore()}
 
 // ---------- NEW: MOOD QUIZ (Woman Bender) ----------
-const QZ={S1:2.9,A:3.6,C:.875,N:8,PAT:[[250,240],[340,150],[110,400],[300,290],[420,190],[140,430],[330,270],[520,200]]};
+const QZ={S1:2.9,A:3.6,C:.5,N:6,PAT:[[250,240],[340,150],[110,400],[300,290],[420,190],[140,430],[330,270],[520,200]]};
 const qzWall=x=>x>1030?2060-x:x<50?100-x:x;
 function stepQuiz(e,dt){
- const f=e.f,g=e.tg,t=e.tm,Z=QZ,A=Z.A,F0=A+.9,F1=F0+Z.C*Z.N;
- if(e.init===undefined){e.init=1;e.good=f.qzDone?Math.random()<.6:true;f.qzDone=1;const a=R(.1,.9);e.fin=6.2832*3+(e.good?a*3.7699:3.7699+a*2.5133);e.d=f.face;e.hx=e.d>0?Math.max(420,Math.min(700,g.x)):Math.max(380,Math.min(660,g.x));e.bx=f.tx;e.hk=-1}
- const cl=()=>{f.gw=0;f.wst=0;f.wlau=0;f.wlh=0;f.waxe=null;f.tube=0;f.slp=0;f.zz=0;f.vl=undefined;f.cfx=null;f.jy=0;f.jv=0;if(e.rg&&!e.rel){e.rel=1;g.rise=0;g.fly=false;g.cfx=null;g.kb=0;if(!g.dead)g.down=Math.max(g.down,1.1)}};
+ const f=e.f,g=e.tg,t=e.tm,Z=QZ,A=Z.A,F0=A+.9,F1=F0+Z.C*Z.N,PN=f.t==10?'she':'he';
+ if(e.init===undefined){e.init=1;e.good=Math.random()<.5;f.qzDone=1;const a=R(.1,.9);e.fin=6.2832*3+(e.good?a*3.1416:3.1416+a*3.1416);e.d=f.face;e.hx=e.d>0?Math.max(420,Math.min(700,g.x)):Math.max(380,Math.min(660,g.x));e.bx=f.tx;e.hk=-1}
+ const cl=()=>{f.sitU=0;f.gw=0;f.wst=0;f.wlau=0;f.wlh=0;f.waxe=null;f.tube=0;f.slp=0;f.zz=0;f.vl=undefined;f.cfx=null;f.jy=0;f.jv=0;if(e.rg&&!e.rel){e.rel=1;g.rise=0;g.fly=false;g.cfx=null;g.kb=0;if(!g.dead)g.down=Math.max(g.down,1.1)}};
  if(f.dead||phase!=='fight'||(amb&&(amb.g===g||amb.g===f))){cl();return false}
  f.gcd=Math.max(f.gcd,.8);f.jt=Math.max(f.jt,3);f.anim=0;f.jy=0;f.jv=0;g.gcd=Math.max(g.gcd,.6);g.tcd=Math.max(g.tcd,.6);g.jt=Math.max(g.jt,.6);
- if(t>=Z.S1&&!e.rv){e.rv=1;banner=e.good?'GOOD MOOD!! She is going to RAGE!':'BAD MOOD... she wants to SLEEP...';bannerT=2;shake=Math.max(shake,e.good?8:3);spawn(f.x,G-318,e.good?'#ff5fbf':'#7a8aef',40,7);spawn(f.x,G-318,'#fff',20,6)}
+ if(t>=Z.S1&&!e.rv){e.rv=1;banner=e.good?(f.t==10?'GOOD MOOD!! She is going to RAGE!':f.t==6?'GOOD MOOD!! He is going to FLOOD the arena!':'GOOD MOOD!! He is going to make 20 CLONES!'):'BAD MOOD... '+PN+' wants to SLEEP...';bannerT=2;shake=Math.max(shake,e.good?8:3);spawn(f.x,G-318,e.good?'#ff5fbf':'#7a8aef',40,7);spawn(f.x,G-318,'#fff',20,6)}
  if(!e.good){
   const S0=A+.8,S1=S0+7;let L=ez((t-A-.3)/.5);if(t>=S1)L=1-ez((t-S1)/.5);
   e.bu=ez((t-A)/.45);if(t>=S1+.5)e.bu=1-ez((t-S1-.5)/.3);e.L=L;
-  if(t>=A&&!e.b0){e.b0=1;spawn(e.bx-f.face*75,G,'#ffb3e6',40,7);spawn(e.bx-f.face*75,G-40,'#fff',20,6);shake=Math.max(shake,8);banner='A BED appears... she lies down for a 7 second NAP!';bannerT=2.2}
+  if(t>=A&&!e.b0){e.b0=1;spawn(e.bx-f.face*75,G,'#ffb3e6',40,7);spawn(e.bx-f.face*75,G-40,'#fff',20,6);shake=Math.max(shake,8);banner='A BED appears... '+PN+' lies down for a 7 second NAP!';bannerT=2.2}
   if(t>=A+.3&&t<S1+.5){f.vl=1.5*L;f.jy=-54*L;f.zz=t<S1?1:0;f.slp=(t>=A+.6&&t<S1)?1:0;f.down=0}
-  if(t>=S1&&!e.b1){e.b1=1;banner='She wakes up refreshed!';bannerT=1.4;spawn(f.x,G-90,'#fff',20,5)}
+  if(t>=S1&&!e.b1){e.b1=1;banner=(f.t==10?'She':'He')+' wakes up refreshed!';bannerT=1.4;spawn(f.x,G-90,'#fff',20,5)}
   if(t>=S1+.5){f.vl=undefined;f.jy=0;f.zz=0;f.slp=0}
   if(t>=S1+.8){cl();return false}
   return true}
- // ---- GOOD MOOD: giant rage + 7 s of axe punches ----
+ if(f.t!==10)return quizGoodAlt(e,f,g,t,Z,A,F1,cl);
+ // ---- GOOD MOOD: giant rage + 3 s of axe punches ----
  if(t>=A&&!e.rg){e.rg=1;banner='GOOD MOOD... she is RAGING and growing GIANT!!';bannerT=2.4;shake=Math.max(shake,6)}
  f.gw=ez((t-A)/.8);if(t>=F1)f.gw=1-ez((t-F1)/.7);
  f.wst=ez((t-A-.3)/.4);if(t>=F1+.1)f.wst=1-ez((t-F1-.1)/.5);f.tube=f.wst>.05?1:0;
@@ -3056,6 +3058,25 @@ function stepQuiz(e,dt){
  f.waxe=(t>=A+.6&&t<F1+.15)?{a:t<F0-.7?-1:ax,gl:1}:null;
  if(t>=F1+.85){cl();return false}
  return true}
+
+function quizGoodAlt(e,f,g,t,Z,A,F1,cl){
+ if(t>=A&&t<=F1+.05){g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;g.gcd=Math.max(g.gcd,1);g.jt=Math.max(g.jt,1)}
+ if(f.t==6){
+  e.fl=t<A?0:t<F1?ez((t-A)/.6):1-ez((t-F1)/.8);
+  if(t>=A&&!e.b2){e.b2=1;banner='Water Bender FLOODS the whole arena!';bannerT=2.2;shake=Math.max(shake,12);envFlash=Math.max(envFlash,.4);spawn(f.x,G-120,'#9fe8ff',50,8)}
+  if(t>=A+.3&&t<F1+.2)f.sitU=.35;
+  if(t>=A+.4&&t<F1){g.down=Math.max(g.down,.5);const k=Math.floor((t-A-.4)/.5);if(k!==e.tk&&k<6){e.tk=k;dealt(f,g,25,'Flood',true);spawn(g.x,G-90,'#9fe8ff',14,6);spawn(g.x,G-40,'#fff',8,5);shake=Math.max(shake,6)}}
+ }else{
+  if(t>=A&&!e.b2){e.b2=1;banner='Naburo makes 20 SHADOW CLONES!';bannerT=2.4;shake=Math.max(shake,10);envFlash=Math.max(envFlash,.3);
+   const gx=g.x,cand=[],pts=[];for(let i=0;i<14;i++){const x=50+i*(980/13);if(Math.abs(x-gx)>90&&Math.abs(x-f.x)>70)cand.push(x)}
+   const st=Math.max(1,cand.length/9);for(let i=0;i<9&&cand.length;i++)pts.push({x:cand[Math.min(cand.length-1,Math.floor(i*st))],top:false,d:i*.04});
+   for(let i=0;i<10;i++)pts.push({x:75+i*103,top:true,d:.4+i*.04});
+   e.cl=pts;pts.forEach(c=>{spawn(c.x,c.top?70:G-60,'#fff',10,5);spawn(c.x,c.top?70:G-60,'#bbb',6,4)})}
+  if(t>=A+.5&&!e.b3){e.b3=1;if(!g.dead&&!imm(g)){g.bleed=Math.max(g.bleed||0,F1-A-.55);g.bld=.1;g.bleedBy=f;splat(g.x,true,16)}}
+  if(t>=A+.5&&t<F1){const k=Math.floor((t-A-.5)/.3);if(k!==e.tk&&k<10){e.tk=k;dealt(f,g,12,'Finger Jab',true);spawn(g.x+R(-20,20),G-R(50,150),'#b3121a',14,6);spawn(g.x,G-90,'#ff3a3a',6,5);shake=Math.max(shake,4)}}
+ }
+ if(t>=F1+.9){cl();return false}
+ return true}
 function drawQuizBack(e){if(e.good||!(e.bu>.01))return;const f=e.f,d=f.face,u=e.bu;
  ctx.save();ctx.globalAlpha=Math.min(1,u*2);ctx.translate(e.bx-d*75,G-(1-u)*320);ctx.scale(d,1);ctx.lineJoin='round';
  ctx.fillStyle='#5a3418';ctx.fillRect(-112,0,12,8);ctx.fillRect(100,0,12,8);
@@ -3074,11 +3095,11 @@ function drawQuizFx(e){const f=e.f,t=e.tm,Z=QZ,A=Z.A,F1=A+.9+Z.C*Z.N;ctx.save();
  if(da>.01&&t<A+.5){const R0=72,cy=G-318-(t>A?40*(1-da):0),sp=Math.min(1,Math.max(0,(t-.5)/(Z.S1-.5))),th=t<.5?0:e.fin*(1-Math.pow(1-sp,3)),rv=t>=Z.S1;
   ctx.save();ctx.translate(f.x,cy);ctx.scale(da,da);ctx.globalAlpha=Math.min(1,da*1.3);
   ctx.fillStyle='rgba(20,10,30,.88)';ctx.strokeStyle='#ff9ae8';ctx.lineWidth=3;ctx.shadowColor='#ff2bd6';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(0,0,R0+10,0,7);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-  [[0,3.7699,'#ff4fa8','#ffd0ee',1],[3.7699,6.2832,'#4a5fc0','#b9c4ff',0]].forEach(([s,en,c,hl,gd])=>{ctx.fillStyle=(rv&&!!gd==e.good&&Math.sin(time*16)>0)?hl:c;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R0,-Math.PI/2+s,-Math.PI/2+en);ctx.closePath();ctx.fill()});
+  [[0,3.1416,'#ff4fa8','#ffd0ee',1],[3.1416,6.2832,'#4a5fc0','#b9c4ff',0]].forEach(([s,en,c,hl,gd])=>{ctx.fillStyle=(rv&&!!gd==e.good&&Math.sin(time*16)>0)?hl:c;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R0,-Math.PI/2+s,-Math.PI/2+en);ctx.closePath();ctx.fill()});
   ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.5;[.34,.67,1].forEach(k=>{ctx.beginPath();ctx.arc(0,0,R0*k,0,7);ctx.stroke()});
-  ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.beginPath();[0,3.7699].forEach(s=>{ctx.moveTo(0,0);ctx.lineTo(Math.sin(s)*R0,-Math.cos(s)*R0)});ctx.stroke();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.beginPath();[0,3.1416].forEach(s=>{ctx.moveTo(0,0);ctx.lineTo(Math.sin(s)*R0,-Math.cos(s)*R0)});ctx.stroke();
   ctx.textAlign='center';ctx.fillStyle='#fff';ctx.strokeStyle='rgba(0,0,0,.65)';ctx.lineWidth=3;
-  [['GOOD','60%',1.885],['BAD','40%',5.027]].forEach(([a,b,m])=>{const x=Math.sin(m)*R0*.66,y=-Math.cos(m)*R0*.66;ctx.font='bold 13px Georgia,serif';ctx.strokeText(a,x,y);ctx.fillText(a,x,y);ctx.font='bold 11px Georgia,serif';ctx.strokeText(b,x,y+12);ctx.fillText(b,x,y+12)});
+  [['GOOD','50%',1.5708],['BAD','50%',4.7124]].forEach(([a,b,m])=>{const x=Math.sin(m)*R0*.66,y=-Math.cos(m)*R0*.66;ctx.font='bold 13px Georgia,serif';ctx.strokeText(a,x,y);ctx.fillText(a,x,y);ctx.font='bold 11px Georgia,serif';ctx.strokeText(b,x,y+12);ctx.fillText(b,x,y+12)});
   ctx.font='bold 16px Georgia,serif';ctx.lineWidth=4;ctx.strokeText('MOOD QUIZ!',0,-R0-18);ctx.fillStyle='#ffe14a';ctx.fillText('MOOD QUIZ!',0,-R0-18);
   ctx.save();ctx.rotate(th);ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillStyle='#ff2a2a';ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(-4.5,8);ctx.lineTo(0,-R0-8);ctx.lineTo(4.5,8);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
   ctx.fillStyle='#222';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,8,0,7);ctx.fill();ctx.stroke();
@@ -3090,8 +3111,24 @@ function drawQuizFx(e){const f=e.f,t=e.tm,Z=QZ,A=Z.A,F1=A+.9+Z.C*Z.N;ctx.save();
   ctx.fillStyle='#ffe14a';[[80,-60],[50,-76],[22,-58],[88,-30],[40,-34],[10,-80]].forEach(([x,y])=>{ctx.beginPath();ctx.arc(x,y,3.2,0,7);ctx.fill()});ctx.restore();
   if(f.slp){ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#223';for(let i=0;i<3;i++){const a=(time*.55+i/3)%1,x=e.bx-d*146+d*(14+a*46),y=G-112-a*100;ctx.globalAlpha=1-a;ctx.font='bold '+(16+a*18)+'px Georgia,serif';ctx.strokeText(i%2?'z':'Z',x,y);ctx.fillStyle='#bfe0ff';ctx.fillText(i%2?'z':'Z',x,y)}}}
  // good mood: wild laughter
- if(e.good&&t>=A+.8&&t<F1+.1){const k=t-A-.8,bx=f.x-f.face*190,by=G-420;ctx.textAlign='center';ctx.font='bold 40px Georgia,serif';ctx.lineWidth=7;ctx.lineJoin='round';
+ if(e.good&&f.t==10&&t>=A+.8&&t<F1+.1){const k=t-A-.8,bx=f.x-f.face*190,by=G-420;ctx.textAlign='center';ctx.font='bold 40px Georgia,serif';ctx.lineWidth=7;ctx.lineJoin='round';
   ['HA!','HA HA!','HAHAHA!!','HA HA HA!!'].forEach((s,i)=>{const n=Math.floor(k*3+i)%4,tx=['HA!','HA HA!','HAHAHA!!','HA HA HA!!'][n],age=(k*3+i)%1,sc=1+.3*Math.max(0,1-age*5);ctx.save();ctx.translate(bx+(i%2?34:-34),by+i*34);ctx.rotate(Math.sin(time*9+i)*.12);ctx.scale(sc,sc);ctx.strokeStyle='#2a0a24';ctx.strokeText(tx,0,0);ctx.fillStyle='#ff7ad9';ctx.fillText(tx,0,0);ctx.restore()})}
+
+ if(e.good&&f.t==6&&e.fl>.01){const fl=Math.min(1,e.fl),base=H*(1-fl*1.06);
+  ctx.save();const gr=ctx.createLinearGradient(0,base,0,H);gr.addColorStop(0,'rgba(130,225,255,'+(.55*Math.min(1,fl*2))+')');gr.addColorStop(1,'rgba(10,70,170,'+(.6*Math.min(1,fl*2))+')');ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(0,H);
+  for(let x=0;x<=W;x+=20)ctx.lineTo(x,base+Math.sin(x*.02+time*4)*10*(1-fl*.5)+Math.sin(x*.05-time*3)*5);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,'+(.7*(1-fl*.7))+')';ctx.lineWidth=3;ctx.beginPath();for(let x=0;x<=W;x+=20){const y=base+Math.sin(x*.02+time*4)*10*(1-fl*.5)+Math.sin(x*.05-time*3)*5;x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.6;for(let i=0;i<40;i++){const bx=(i*97.3+Math.sin(time*2+i)*14)%W,by=H-((time*70+i*57)%(H+40)),br=3+(i%4)*2;if(by>base){ctx.beginPath();ctx.arc(bx,by,br,0,7);ctx.stroke()}}
+  ctx.restore();
+  if(t>=A+.4&&t<F1+.2){const k=t-A-.4,fa=t>F1?Math.max(0,1-(t-F1)/.2):1,bx=f.x-f.face*10,by=G-360;ctx.textAlign='center';ctx.font='bold 40px Georgia,serif';ctx.lineWidth=7;ctx.lineJoin='round';
+   ['HA!','HA HA!','HAHAHA!!','HA HA HA!!'].forEach((s0,i)=>{const n=Math.floor(k*3+i)%4,tx=['HA!','HA HA!','HAHAHA!!','HA HA HA!!'][n],age=(k*3+i)%1,sc=1+.3*Math.max(0,1-age*5);ctx.save();ctx.globalAlpha=fa;ctx.translate(bx+(i%2?60:-60),by-i*34);ctx.rotate(Math.sin(time*9+i)*.12);ctx.scale(sc,sc);ctx.strokeStyle='#06304f';ctx.strokeText(tx,0,0);ctx.fillStyle='#bff3ff';ctx.fillText(tx,0,0);ctx.restore()})}}
+ if(e.good&&f.t==11&&e.cl){const g=e.tg,fade=t>F1?1-ez((t-F1)/.5):1;
+  e.cl.forEach(c=>{const a=ez((t-A-c.d)/.25)*fade;if(a<.02)return;const sc=.7,face=Math.sign(g.x-c.x)||1;
+   ctx.save();if(c.top){ctx.translate(c.x,42);ctx.rotate(Math.PI);ctx.translate(-c.x,-G);ghostP(f,c.x,-face,a,0,{sc})}else ghostP(f,c.x,face,a,0,{sc});ctx.restore();
+   const sy=c.top?42+62*sc:G-62*sc,ty=G-95,dx=g.x-c.x,dy=ty-sy,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=c.x+ux*40,py=sy+uy*40;
+   ctx.save();ctx.globalAlpha=a;ctx.lineCap='round';ctx.strokeStyle='#f2cfa5';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(c.x,sy);ctx.lineTo(px,py);ctx.stroke();ctx.fillStyle='#f2cfa5';ctx.beginPath();ctx.arc(px+ux*3,py+uy*3,3.4,0,7);ctx.fill();
+   if(t>=A+.5&&t<F1){ctx.strokeStyle='rgba(255,70,70,'+(.6*a)+')';ctx.lineWidth=2;ctx.setLineDash([5,7]);ctx.lineDashOffset=-time*90;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(g.x,ty);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(255,255,255,'+(.5+.4*Math.sin(time*20+c.x))+')';ctx.beginPath();ctx.arc(px+ux*5,py+uy*5,3,0,7);ctx.fill()}
+   ctx.restore()})}
  ctx.restore()}
 function womanAxe(f){const b=f.waxe;if(!b)return;const a=b.a,L=22,hx=12+Math.cos(a)*L,hy=-66+Math.sin(a)*L;
  ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
@@ -3130,7 +3167,8 @@ const ULTS={
  (f,t)=>FR(t)&&!f.wbat&&ultP(f,t,9.5,'Woman Bender · BAT SWARM!','',{k:'Bt'},0),
  (f,t)=>FR(t)&&!f.wbat&&!f.waxe&&ultP(f,t,12,'Woman Bender · MOOD QUIZ!','',{k:'Qz'},0),
  (f,t)=>FR(t)&&ultP(f,t,6,'Woman Bender · KICK STORM!','',{k:'K'})],
-11:[(f,t)=>FR(t)&&ultP(f,t,9,'Naburo Bender · GREEN ROPES & FLYING KICK!','Naburo Bender summons GREEN ROPES...',{k:'Q'}),
+11:[(f,t)=>FR(t)&&ultP(f,t,12,'Naburo Bender · MOOD QUIZ!','',{k:'Qz'},0),
+ (f,t)=>FR(t)&&ultP(f,t,9,'Naburo Bender · GREEN ROPES & FLYING KICK!','Naburo Bender summons GREEN ROPES...',{k:'Q'}),
  (f,t)=>!imm(t)&&ultP(f,t,4.2,'Naburo Bender · GIANT SPINNING SHURIKEN!','Naburo Bender throws a HUGE SPINNING SHURIKEN!',{k:'H',done:false}),
  (f,t)=>FR(t)&&ultP(f,t,6.4,'Naburo Bender · GIANT FOX & 3 TAIL STABS!','Naburo summons a GIANT FOX!',{k:'X',hit:false})],
 12:[(f,t)=>FR(t)&&ultP(f,t,3.2,'Byakuya · Petal Slash','',{k:'Sl',hit:false}),
